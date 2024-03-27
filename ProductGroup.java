@@ -2,6 +2,7 @@ public class ProductGroup {
     String name;
     String description;
 
+    Product[] products;
     public ProductGroup(String name, String description) {
         this.name = name;
         this.description = description;
