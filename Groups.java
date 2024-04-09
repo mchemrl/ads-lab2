@@ -11,9 +11,11 @@ public class Groups extends JPanel {
     private JLabel infoLabel;
     private JTextArea groupDescription; // JTextArea for group description
     private ArrayList<ProductGroup> groups; // ArrayList of ProductGroup
+    ProductGroup group;
     private DefaultListModel<ProductGroup> groupListModel; // Model for JList
     private JList<ProductGroup> groupList; // JList of ProductGroup
 
+    private ProductGroup selectedGroup;
     public Groups() {
         setLayout(new BorderLayout());
 
@@ -43,6 +45,7 @@ public class Groups extends JPanel {
                 ProductGroup selectedGroup = groupList.getSelectedValue();
                 infoLabel.setText("bla bla " + selectedGroup.getName());
                 groupDescription.setText(selectedGroup.getDescription()); // Update JTextArea with group description
+                selectedGroup = groupList.getSelectedValue();
             }
         });
 
@@ -73,6 +76,23 @@ public class Groups extends JPanel {
         });
         JButton deleteGroupButton = new JButton("Delete Group");
         deleteGroupButton.setFont(new Font("Century Gothic", Font.PLAIN, 16));
+        deleteGroupButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Get the selected group
+                ProductGroup selectedGroup = groupList.getSelectedValue();
+                if (selectedGroup != null) {
+                    // Remove the selected group from the JList
+                    groupListModel.removeElement(selectedGroup);
+                    // Remove the selected group from the ArrayList
+                    groups.remove(selectedGroup);
+                    // Remove the selected group from the file
+                    ProductGroup.deleteGroup(selectedGroup);
+                    // Rewrite the file
+                    new ProductGroup("", "").writeGroupNamesToFile();
+                }
+            }
+        });
         JButton editGroupButton = new JButton("Edit Group");
         editGroupButton.setFont(new Font("Century Gothic", Font.PLAIN, 16));
 
