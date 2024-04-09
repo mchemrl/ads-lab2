@@ -6,7 +6,7 @@ import java.util.ArrayList;
 public class ProductGroup {
     private String name;
     private String description;
-     static ArrayList <ProductGroup> groups = new ArrayList < >();
+    static ArrayList <ProductGroup> groups = new ArrayList < >();
 
     public ProductGroup(String name, String description) {
         this.name = name;
@@ -17,6 +17,12 @@ public class ProductGroup {
 
     public static void deleteGroup(ProductGroup group) {
         groups.remove(group);
+        writeGroupNamesToFile();
+    }
+
+    public static void editGroup(ProductGroup group, String name, String description) {
+        group.name = name;
+        group.description = description;
         writeGroupNamesToFile();
     }
 

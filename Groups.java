@@ -95,6 +95,22 @@ public class Groups extends JPanel {
         });
         JButton editGroupButton = new JButton("Edit Group");
         editGroupButton.setFont(new Font("Century Gothic", Font.PLAIN, 16));
+        editGroupButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Get the selected group
+                ProductGroup selectedGroup = groupList.getSelectedValue();
+                if (selectedGroup != null) {
+                    // Get the new name and description
+                    String name = JOptionPane.showInputDialog("Enter new group name", selectedGroup.getName());
+                    String description = JOptionPane.showInputDialog("Enter new group description", selectedGroup.getDescription());
+                    // Edit the group
+                    ProductGroup.editGroup(selectedGroup, name, description);
+                    // Update the JList
+                    groupListModel.setElementAt(selectedGroup, groupList.getSelectedIndex());
+                }
+            }
+        });
 
         // Add the buttons to the button panel
         buttonPanel.add(addGroupButton);
