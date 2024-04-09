@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 public class Product {
 
     String name;
@@ -5,6 +7,7 @@ public class Product {
     String manufacturer;
     int quantity;
     double price;
+    ArrayList<Product> products = new ArrayList<>();
 
     // constructor for product
     public Product(String name, String description, String manufacturer, int quantity, double price) {
@@ -13,6 +16,21 @@ public class Product {
         this.manufacturer = manufacturer;
         this.quantity = quantity;
         this.price = price;
+    }
+    public void addProduct(Product product) {
+        this.products.add(product);
+    }
+
+    public void editProduct(int index, Product product) {
+        if (index >= 0 && index < this.products.size()) {
+            this.products.set(index, product);
+        }
+    }
+
+    public void deleteProduct(int index) {
+        if (index >= 0 && index < this.products.size()) {
+            this.products.remove(index);
+        }
     }
 
     public String getName() {

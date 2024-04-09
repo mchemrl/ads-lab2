@@ -5,6 +5,7 @@ import java.awt.*;
 
 public class FactoryUI extends JFrame {
     public FactoryUI() {
+
         setSize(500, 700);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
