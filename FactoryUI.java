@@ -1,5 +1,3 @@
-package Tabs;
-
 import javax.swing.*;
 import java.awt.*;
 
