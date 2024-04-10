@@ -1,54 +1,53 @@
-import Tabs.Groups;
-
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class ProductGroup {
-    String name;
-    String description;
+    private String name;
+    private String description;
+    static ArrayList <ProductGroup> groups = new ArrayList < >();
 
-    public void addGroup(Groups group) {
-        this.groups.add(group);
-    }
-
-    public void editGroup(int index, Groups group) {
-        if (index >= 0 && index < this.groups.size()) {
-            this.groups.set(index, group);
-        }
-    }
-
-    public void deleteGroup(int index) {
-        if (index >= 0 && index < this.groups.size()) {
-            this.groups.remove(index);
-        }
-    }
-    ArrayList<Groups> groups = new ArrayList<>();
-    Product[] products;
     public ProductGroup(String name, String description) {
         this.name = name;
         this.description = description;
+        groups.add(this);
+        writeGroupNamesToFile();
     }
 
+    public static void deleteGroup(ProductGroup group) {
+        groups.remove(group);
+        writeGroupNamesToFile();
+    }
+
+    public static void editGroup(ProductGroup group, String name, String description) {
+        group.name = name;
+        group.description = description;
+        writeGroupNamesToFile();
+    }
+
+    public static void writeGroupNamesToFile() {
+        try {
+            BufferedWriter writer = new BufferedWriter(new FileWriter("group_names.txt"));
+            for (ProductGroup group : groups) {
+                writer.write(group.getName());
+                writer.newLine();
+            }
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
     public String getName() {
         return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public String getDescription() {
         return description;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
     @Override
     public String toString() {
-        return "ProductGroup{" +
-                "name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                '}';
+        return name;
     }
 }
