@@ -60,7 +60,8 @@ public class Groups extends JPanel {
 
         // Create a new JPanel for the buttons
         JPanel buttonPanel = new JPanel();
-
+        buttonPanel.setLayout(new GridLayout(2,2));
+        buttonPanel.getSize(new Dimension(150, 40));
         // Create the buttons
         JButton addGroupButton = new JButton("Add Group");
         addGroupButton.setFont(new Font("Century Gothic", Font.PLAIN, 16));
@@ -111,11 +112,27 @@ public class Groups extends JPanel {
                 }
             }
         });
+        JButton searchGroupButton = new JButton("Search Group");
+        searchGroupButton.setFont(new Font("Century Gothic", Font.PLAIN, 16));
+        searchGroupButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String search = JOptionPane.showInputDialog("Enter group name to search");
+                for (ProductGroup group : groups) {
+                    if (group.getName().equals(search)) {
+                        groupList.setSelectedValue(group, true);
+                        return;
+                    }
+                }
+                JOptionPane.showMessageDialog(null, "Group not found");
+            }
+        });
 
         // Add the buttons to the button panel
         buttonPanel.add(addGroupButton);
         buttonPanel.add(deleteGroupButton);
         buttonPanel.add(editGroupButton);
+        buttonPanel.add(searchGroupButton);
 
         // Add the button panel to the bottom of the Groups class
         add(buttonPanel, BorderLayout.SOUTH);

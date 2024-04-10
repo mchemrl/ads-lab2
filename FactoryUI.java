@@ -7,6 +7,7 @@ public class FactoryUI extends JFrame {
         setSize(500, 700);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
+
         JTabbedPane tabbedPane = new JTabbedPane();
         tabbedPane.setFont(new Font("Century Gothic", Font.PLAIN, 16));
 
