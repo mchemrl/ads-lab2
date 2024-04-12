@@ -1,6 +1,4 @@
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 
 public class ProductGroup {
@@ -44,6 +42,10 @@ public class ProductGroup {
 
     public String getDescription() {
         return description;
+    }
+    public static ArrayList<ProductGroup> getExistingGroups() {
+
+        return groups;
     }
 
     @Override
