@@ -19,9 +19,9 @@ public class Items extends JPanel {
     private ArrayList<ProductGroup> existingGroups;
 
 
-    public Items() {
+    public Items(ArrayList<ProductGroup> existingGroups) {
         setLayout(new BorderLayout());
-
+        this.existingGroups = existingGroups;
         JLabel titleLabel = new JLabel("Items");
         titleLabel.setFont(new Font("Century Gothic", Font.BOLD, 20));
         titleLabel.setHorizontalAlignment(SwingConstants.CENTER);
@@ -33,8 +33,8 @@ public class Items extends JPanel {
 
         // Кнопки
         RoundedButton searchButton = new RoundedButton("Search");
-        RoundedButton addGroupButton = new  RoundedButton("Add Item");
-        RoundedButton deleteGroupButton = new  RoundedButton("Delete Item");
+        RoundedButton addGroupButton = new RoundedButton("Add Item");
+        RoundedButton deleteGroupButton = new RoundedButton("Delete Item");
 
         // Додавання кнопок на панель
         buttonPanel.add(searchButton);
@@ -69,56 +69,60 @@ public class Items extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String selectedGroup = (String) groupComboBox.getSelectedItem();
-                if (selectedGroup != null) {
-                    boolean validInput = false;
-                    String name = "";
-                    String description = "";
-                    String manufacturer = "";
-                    int quantity = 0;
-                    double price = 0.0;
+                if (selectedGroup == null) {
+                    JOptionPane.showMessageDialog(null, "Please select a group first.", "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
 
-                    while (!validInput) {
-                        name = JOptionPane.showInputDialog(null, "Enter the name of the product:");
-                        if (name != null) {
-                            description = JOptionPane.showInputDialog(null, "Enter the description of the product:");
-                            if (description != null) {
-                                manufacturer = JOptionPane.showInputDialog(null, "Enter the manufacturer of the product:");
-                                if (manufacturer != null) {
-                                    String quantityStr = JOptionPane.showInputDialog(null, "Enter the quantity:");
-                                    if (quantityStr != null) {
-                                        try {
-                                            quantity = Integer.parseInt(quantityStr);
-                                            String priceStr = JOptionPane.showInputDialog(null, "Enter the price:");
-                                            if (priceStr != null) {
-                                                try {
-                                                    price = Double.parseDouble(priceStr);
-                                                    validInput = true;
-                                                } catch (NumberFormatException ex) {
-                                                    JOptionPane.showMessageDialog(null, "Invalid price! Please enter a valid price.", "Error", JOptionPane.ERROR_MESSAGE);
-                                                }
+                boolean validInput = false;
+                String name = "";
+                String description = "";
+                String manufacturer = "";
+                int quantity = 0;
+                double price = 0.0;
+
+                while (!validInput) {
+                    name = JOptionPane.showInputDialog(null, "Enter the name of the product:");
+                    if (name != null) {
+                        description = JOptionPane.showInputDialog(null, "Enter the description of the product:");
+                        if (description != null) {
+                            manufacturer = JOptionPane.showInputDialog(null, "Enter the manufacturer of the product:");
+                            if (manufacturer != null) {
+                                String quantityStr = JOptionPane.showInputDialog(null, "Enter the quantity:");
+                                if (quantityStr != null) {
+                                    try {
+                                        quantity = Integer.parseInt(quantityStr);
+                                        String priceStr = JOptionPane.showInputDialog(null, "Enter the price:");
+                                        if (priceStr != null) {
+                                            try {
+                                                price = Double.parseDouble(priceStr);
+                                                validInput = true;
+                                            } catch (NumberFormatException ex) {
+                                                JOptionPane.showMessageDialog(null, "Invalid price! Please enter a valid price.", "Error", JOptionPane.ERROR_MESSAGE);
                                             }
-                                        } catch (NumberFormatException ex) {
-                                            JOptionPane.showMessageDialog(null, "Invalid quantity! Please enter a valid quantity.", "Error", JOptionPane.ERROR_MESSAGE);
                                         }
+                                    } catch (NumberFormatException ex) {
+                                        JOptionPane.showMessageDialog(null, "Invalid quantity! Please enter a valid quantity.", "Error", JOptionPane.ERROR_MESSAGE);
                                     }
                                 }
                             }
                         }
                     }
-
-                    productListTextArea.append("Group: " + selectedGroup + "\n");
-                    productListTextArea.append("Name: " + name + "\n");
-                    productListTextArea.append("Description: " + description + "\n");
-                    productListTextArea.append("Manufacturer: " + manufacturer + "\n");
-                    productListTextArea.append("Quantity: " + quantity + "\n");
-                    productListTextArea.append("Price: " + price + "\n\n");
-
-                    JLabel productLabel = new JLabel("<html><b>Group:</b> " + selectedGroup + ", <b>Name:</b> " + name + ", <b>Quantity:</b> " + quantity + ", <b>Price:</b> " + price + "</html>");
-                    productLabel.setFont(new Font("Century Gothic", Font.PLAIN, 20));
-                    productPanel.add(productLabel);
-                    productPanel.revalidate();
-                    productPanel.repaint();
                 }
+                Product newProduct = new Product(name, description, manufacturer, quantity, price);
+
+                productListTextArea.append("Group: " + selectedGroup + "\n");
+                productListTextArea.append("Name: " + name + "\n");
+                productListTextArea.append("Description: " + description + "\n");
+                productListTextArea.append("Manufacturer: " + manufacturer + "\n");
+                productListTextArea.append("Quantity: " + quantity + "\n");
+                productListTextArea.append("Price: " + price + "\n\n");
+
+                JLabel productLabel = new JLabel("<html><b>Group:</b> " + selectedGroup + ", <b>Name:</b> " + name + ", <b>Quantity:</b> " + quantity + ", <b>Price:</b> " + price + "</html>");
+                productLabel.setFont(new Font("Century Gothic", Font.PLAIN, 20));
+                productPanel.add(productLabel);
+                productPanel.revalidate();
+                productPanel.repaint();
             }
         });
 
@@ -164,11 +168,13 @@ public class Items extends JPanel {
 
     // Оновлення ComboBox на основі актуальних даних
     private void updateGroupComboBox() {
-        existingGroups = ProductGroup.groups; // Оновлення існуючих груп
+        this.existingGroups = ProductGroup.getExistingGroups(); // Оновлення списку груп
         ArrayList<String> groupNames = new ArrayList<>();
         for (ProductGroup group : existingGroups) {
             groupNames.add(group.getName());
         }
         groupComboBox.setModel(new DefaultComboBoxModel<>(groupNames.toArray(new String[0])));
     }
+
+
 }
