@@ -1,10 +1,12 @@
+package structure;
+
 import java.io.*;
 import java.util.ArrayList;
 
 public class ProductGroup {
     private String name;
     private String description;
-    static ArrayList <ProductGroup> groups = new ArrayList < >();
+    public static ArrayList <ProductGroup> groups = new ArrayList < >();
 
     public ProductGroup(String name, String description) {
         this.name = name;

@@ -1,3 +1,5 @@
+package ui;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -6,7 +8,7 @@ public class Statistics extends JPanel {
         setLayout(new BorderLayout());
 
 
-        JLabel titleLabel = new JLabel("Statistics");
+        JLabel titleLabel = new JLabel("ui.Statistics");
         titleLabel.setFont(new Font("Century Gothic", Font.PLAIN, 16));
         titleLabel.setHorizontalAlignment(SwingConstants.CENTER); // Вирівнювання тексту по центру
         add(titleLabel, BorderLayout.NORTH);

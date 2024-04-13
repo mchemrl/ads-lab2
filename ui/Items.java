@@ -1,8 +1,14 @@
+package ui;
+
+import structure.ProductGroup;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import structure.ProductGroup;
+import structure.Product;
 
 public class Items extends JPanel {
     private JTextArea productListTextArea;
@@ -13,7 +19,7 @@ public class Items extends JPanel {
     public Items() {
         setLayout(new BorderLayout());
 
-        JLabel titleLabel = new JLabel("Groups of goods");
+        JLabel titleLabel = new JLabel("ui.Groups of goods");
         titleLabel.setFont(new Font("Century Gothic", Font.BOLD, 20));
         titleLabel.setHorizontalAlignment(SwingConstants.CENTER);
         add(titleLabel, BorderLayout.NORTH);

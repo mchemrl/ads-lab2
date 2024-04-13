@@ -29,7 +29,7 @@ public class RoundedButton extends JButton {
 
     @Override
     protected void paintBorder(Graphics g) {
-        g.setColor(Color.WHITE);
+        g.setColor(Color.getHSBColor(10, 35,230));
         g.drawRoundRect(0, 0, getWidth()-1, getHeight()-1, 20, 20);
     }
 }

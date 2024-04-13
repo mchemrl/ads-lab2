@@ -1,3 +1,5 @@
+package ui;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -6,8 +8,11 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 
+import structure.ProductGroup;
 import uimodels.DescriptionField;
+import uimodels.GroupList;
 import uimodels.RoundedButton;
+import uimodels.RoundedTextField;
 
 public class Groups extends JPanel {
     private JPanel rightPanel;
@@ -15,13 +20,14 @@ public class Groups extends JPanel {
 
     private DescriptionField groupDescription;
   //  private JTextArea groupDescription; // JTextArea for group description
-    private ArrayList<ProductGroup> groups; // ArrayList of ProductGroup
+    public ArrayList<ProductGroup> groups; // ArrayList of structure.ProductGroup
     ProductGroup group;
     private DefaultListModel<ProductGroup> groupListModel; // Model for JList
-    private JList<ProductGroup> groupList; // JList of ProductGroup
-
+   // private JList<structure.ProductGroup> groupList; // JList of structure.ProductGroup
+private GroupList groupList;
     private ProductGroup selectedGroup;
     public Groups() {
+        setBackground(Color.WHITE);
         setLayout(new BorderLayout());
         JLabel titleLabel = new JLabel("Groups of items");
         titleLabel.setFont(new Font("Century Gothic", Font.BOLD, 20));
@@ -31,7 +37,6 @@ public class Groups extends JPanel {
         rightPanel.setLayout(new BorderLayout()); // Set layout to BorderLayout
         infoLabel = new JLabel();
         rightPanel.add(infoLabel, BorderLayout.NORTH); // Add infoLabel to the top
-
 
         groupDescription = new DescriptionField(); // Initialize JTextArea
 
@@ -50,9 +55,9 @@ public class Groups extends JPanel {
 
         groups = new ArrayList<>(); // Initialize ArrayList
         groupListModel = new DefaultListModel<>(); // Initialize DefaultListModel
-        groupList = new JList<>(groupListModel); // Initialize JList with DefaultListModel
-        groupList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        groupList.addMouseListener(new MouseAdapter() {
+        groupList = new GroupList(groupListModel); // Initialize JList with DefaultListModel
+        groupList.getGroupList().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        groupList.getGroupList().addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 ProductGroup selectedGroup = groupList.getSelectedValue();
@@ -86,13 +91,47 @@ public class Groups extends JPanel {
         addGroupButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String name = JOptionPane.showInputDialog("Enter group name");
-                String description = JOptionPane.showInputDialog("Enter group description");
-                ProductGroup newGroup = new ProductGroup(name, description);
-                groups.add(newGroup);
-                groupListModel.addElement(newGroup);
-            }
-        });
+                RoundedTextField nameField = new RoundedTextField(15);
+                RoundedTextField descriptionField = new RoundedTextField(15);
+
+                JPanel panel = new JPanel();
+                panel.setLayout(new GridLayout(0, 1));
+                panel.add(new JLabel("Enter group name:"));
+                panel.add(nameField);
+                panel.add(new JLabel("Enter group description:"));
+                panel.add(descriptionField);
+
+                RoundedButton saveButton = new RoundedButton("Save");
+                saveButton.setPreferredSize(new Dimension(10, 30));
+
+                JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+                buttonPanel.add(saveButton);
+
+                panel.add(buttonPanel);
+                saveButton.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        String name = nameField.getText();
+                        String description = descriptionField.getText();
+                        ProductGroup newGroup = new ProductGroup(name, description);
+                        groups.add(newGroup);
+                        groupListModel.addElement(newGroup);
+                        Window win = SwingUtilities.getWindowAncestor(saveButton);
+                        if (win != null) {
+                            win.dispose();
+                        }
+                    }
+                });
+
+                panel.add(saveButton);
+
+                JDialog dialog = new JDialog();
+                dialog.setModal(true);
+                dialog.getContentPane().add(panel);
+                dialog.pack();
+                dialog.setLocationRelativeTo(null);
+                dialog.setVisible(true);
+            }});
         RoundedButton deleteGroupButton = new RoundedButton("Delete Group");
         deleteGroupButton.setFont(new Font("Century Gothic", Font.PLAIN, 12));
         layout.setConstraints(deleteGroupButton, gbc);
@@ -119,16 +158,53 @@ public class Groups extends JPanel {
         editGroupButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // Get the selected group
                 ProductGroup selectedGroup = groupList.getSelectedValue();
                 if (selectedGroup != null) {
-                    // Get the new name and description
-                    String name = JOptionPane.showInputDialog("Enter new group name", selectedGroup.getName());
-                    String description = JOptionPane.showInputDialog("Enter new group description", selectedGroup.getDescription());
-                    // Edit the group
-                    ProductGroup.editGroup(selectedGroup, name, description);
-                    // Update the JList
-                    groupListModel.setElementAt(selectedGroup, groupList.getSelectedIndex());
+                    RoundedTextField nameField = new RoundedTextField(15);
+                    nameField.setText(selectedGroup.getName());
+                    RoundedTextField descriptionField = new RoundedTextField(15);
+                    descriptionField.setText(selectedGroup.getDescription());
+
+                    JPanel panel = new JPanel();
+                    panel.setLayout(new GridLayout(0, 1));
+                    panel.add(new JLabel("Enter new group name:"));
+                    panel.add(nameField);
+                    panel.add(new JLabel("Enter new group description:"));
+                    panel.add(descriptionField);
+
+                    RoundedButton saveButton = new RoundedButton("Save");
+                    saveButton.setPreferredSize(new Dimension(10, 30));
+
+                    JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+                    buttonPanel.add(saveButton);
+
+                    panel.add(buttonPanel);
+                    saveButton.addActionListener(new ActionListener() {
+                        @Override
+                        public void actionPerformed(ActionEvent e) {
+                            String name = nameField.getText();
+                            String description = descriptionField.getText();
+                            // Edit the group
+                            ProductGroup.editGroup(selectedGroup, name, description);
+                            // Update the JList
+                            groupListModel.setElementAt(selectedGroup, groupList.getGroupList().getSelectedIndex());
+                            // Update the groupDescription field
+                            groupDescription.setText(description);
+                            Window win = SwingUtilities.getWindowAncestor(saveButton);
+                            if (win != null) {
+                                win.dispose();
+                            }
+                        }
+                    });
+
+                    panel.add(saveButton);
+
+                    JDialog dialog = new JDialog();
+                    dialog.setModal(true);
+                    dialog.getContentPane().add(panel);
+                    dialog.pack();
+                    dialog.setLocationRelativeTo(null);
+                    dialog.setVisible(true);
                 }
             }
         });
@@ -141,7 +217,7 @@ public class Groups extends JPanel {
                 String search = JOptionPane.showInputDialog("Enter group name to search");
                 for (ProductGroup group : groups) {
                     if (group.getName().equals(search)) {
-                        groupList.setSelectedValue(group, true);
+                        groupList.getGroupList().setSelectedValue(group, true);
                         return;
                     }
                 }
@@ -167,6 +243,7 @@ public class Groups extends JPanel {
         gbc.weighty = 1; // request any extra vertical space
         gbc.fill = GridBagConstraints.BOTH;
          buttonPanel.add(groupDescription, gbc);
+         buttonPanel.setBackground(Color.getHSBColor(2.0f/100, 0.0f/100, 98.0f/100));
         add(buttonPanel, BorderLayout.SOUTH);
     }
 }

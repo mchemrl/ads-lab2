@@ -1,3 +1,5 @@
+package structure;
+
 import java.util.ArrayList;
 
 public class Product {
@@ -75,7 +77,7 @@ public class Product {
 
     @Override
     public String toString() {
-        return "Product{" +
+        return "structure.Product{" +
                 "name='" + name + '\'' +
                 ", description='" + description + '\'' +
                 ", manufacturer='" + manufacturer + '\'' +
