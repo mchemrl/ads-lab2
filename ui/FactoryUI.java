@@ -1,7 +1,11 @@
 package ui;
 
+import structure.ProductGroup;
+
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
+
 public class FactoryUI extends JFrame {
     public FactoryUI() {
         setSize(540, 720);
@@ -13,7 +17,8 @@ public class FactoryUI extends JFrame {
         tabbedPane.setFont(new Font("Century Gothic", Font.PLAIN, 14));
 
         Groups tab1 = new Groups();
-        Items tab2 = new Items();
+        ArrayList<ProductGroup> existingGroups = ProductGroup.getExistingGroups();
+        Items tab2 = new Items(existingGroups);
         Statistics tab3 = new Statistics();
 
         tab1.setBackground(Color.getHSBColor(2.0f/100, 4.0f/100, 98.0f/100));
@@ -32,6 +37,7 @@ tab3.setBackground(Color.getHSBColor(2.0f/100, 4.0f/100, 98.0f/100));
 
         setVisible(true);
     }
+
 
     public static void main(String[] args) {
         new FactoryUI();
