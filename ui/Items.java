@@ -9,6 +9,8 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import structure.ProductGroup;
 import structure.Product;
+import uimodels.RoundedButton;
+import uimodels.RoundedComboBox;
 
 public class Items extends JPanel {
     private JTextArea productListTextArea;
@@ -16,35 +18,36 @@ public class Items extends JPanel {
     private JComboBox<String> groupComboBox;
     private ArrayList<ProductGroup> existingGroups;
 
+
     public Items() {
         setLayout(new BorderLayout());
 
-        JLabel titleLabel = new JLabel("ui.Groups of goods");
+        JLabel titleLabel = new JLabel("Items");
         titleLabel.setFont(new Font("Century Gothic", Font.BOLD, 20));
         titleLabel.setHorizontalAlignment(SwingConstants.CENTER);
         add(titleLabel, BorderLayout.NORTH);
 
         // Панель кнопок
         JPanel buttonPanel = new JPanel();
-        buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.Y_AXIS));
+        buttonPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 
         // Кнопки
-        JButton searchButton = new JButton("Search");
-        JButton addGroupButton = new JButton("Add Item");
-        JButton deleteGroupButton = new JButton("Delete Item");
+        RoundedButton searchButton = new RoundedButton("Search");
+        RoundedButton addGroupButton = new  RoundedButton("Add Item");
+        RoundedButton deleteGroupButton = new  RoundedButton("Delete Item");
 
         // Додавання кнопок на панель
-        buttonPanel.add(Box.createVerticalStrut(20));
+    //    buttonPanel.add(Box.createVerticalStrut(20));
         buttonPanel.add(searchButton);
-        buttonPanel.add(Box.createVerticalStrut(10));
+      //  buttonPanel.add(Box.createVerticalStrut(10));
         buttonPanel.add(addGroupButton);
-        buttonPanel.add(Box.createVerticalStrut(10));
+        //buttonPanel.add(Box.createVerticalStrut(10));
         buttonPanel.add(deleteGroupButton);
 
-        // Створення ComboBox перед викликом методу updateGroupComboBox()
-        groupComboBox = new JComboBox<>();
-        groupComboBox.setFont(new Font("Century Gothic", Font.PLAIN, 16));
 
+        // Створення ComboBox перед викликом методу updateGroupComboBox()
+        groupComboBox = new RoundedComboBox();
+        groupComboBox.setPreferredSize(new Dimension(220, 25));
         // Додавання ComboBox на панель кнопок
         buttonPanel.add(groupComboBox);
 
