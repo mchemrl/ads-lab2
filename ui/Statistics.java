@@ -12,7 +12,7 @@ public class Statistics extends JPanel {
         setBackground(Color.WHITE);
 
         JLabel titleLabel = new JLabel("Statistics");
-        titleLabel.setFont(new Font("Century Gothic", Font.BOLD, 16));
+        titleLabel.setFont(new Font("Century Gothic", Font.BOLD, 20));
         titleLabel.setHorizontalAlignment(SwingConstants.CENTER); // Вирівнювання тексту по центру
         add(titleLabel, BorderLayout.NORTH);
 
