@@ -1,19 +1,23 @@
 package ui;
 
+import uimodels.RoundedButton;
+import uimodels.RoundedComboBox;
+
 import javax.swing.*;
 import java.awt.*;
 
 public class Statistics extends JPanel {
     public Statistics() {
         setLayout(new BorderLayout());
+        setBackground(Color.WHITE);
 
-
-        JLabel titleLabel = new JLabel("ui.Statistics");
-        titleLabel.setFont(new Font("Century Gothic", Font.PLAIN, 16));
+        JLabel titleLabel = new JLabel("Statistics");
+        titleLabel.setFont(new Font("Century Gothic", Font.BOLD, 16));
         titleLabel.setHorizontalAlignment(SwingConstants.CENTER); // Вирівнювання тексту по центру
         add(titleLabel, BorderLayout.NORTH);
 
         JPanel statisticsPanel = new JPanel(new GridBagLayout());
+        statisticsPanel.setBackground((Color.getHSBColor(2.0f/100, 4.0f/100, 98.0f/100)));
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = 0;
@@ -25,7 +29,7 @@ public class Statistics extends JPanel {
         priceLabel.setFont(new Font("Century Gothic", Font.PLAIN, 14));
         statisticsPanel.add(priceLabel, gbc);
 
-        JButton calculateButton = new JButton("Calculate");
+        RoundedButton calculateButton = new RoundedButton("Calculate");
         calculateButton.setFont(new Font("Century Gothic", Font.PLAIN, 14));
         gbc.gridx = 1;
         gbc.anchor = GridBagConstraints.EAST;
@@ -52,7 +56,7 @@ public class Statistics extends JPanel {
         gbc.anchor = GridBagConstraints.WEST;
         statisticsPanel.add(selectGroupLabel, gbc);
 
-        JComboBox<String> groupComboBox = new JComboBox<>();
+        RoundedComboBox groupComboBox = new RoundedComboBox();
         groupComboBox.addItem("");
         groupComboBox.addItem("Group 1");
         groupComboBox.addItem("Group 2");
@@ -68,7 +72,7 @@ public class Statistics extends JPanel {
         gbc.anchor = GridBagConstraints.WEST;
         statisticsPanel.add(selectItemLabel, gbc);
 
-        JComboBox<String> itemComboBox = new JComboBox<>();
+       RoundedComboBox itemComboBox = new RoundedComboBox();
         itemComboBox.addItem("");
         itemComboBox.addItem("Item 1");
         itemComboBox.addItem("Item 2");
