@@ -5,6 +5,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+import uimodels.RoundedButton;
 
 public class Groups extends JPanel {
     private JPanel rightPanel;
@@ -28,7 +29,17 @@ public class Groups extends JPanel {
         rightPanel.add(infoLabel, BorderLayout.NORTH); // Add infoLabel to the top
 
         groupDescription = new JTextArea(); // Initialize JTextArea
-        groupDescription.setEditable(false); // Make it non-editable
+        groupDescription.setEditable(false);
+        groupDescription.setLineWrap(true);
+        groupDescription.setWrapStyleWord(true);
+        groupDescription.setFont(new Font("Century Gothic", Font.PLAIN, 13));
+        groupDescription.setRows(0);
+        groupDescription.setPreferredSize(new Dimension(150,40)); // Set the size
+        JScrollPane groupDescriptionScrollPane = new JScrollPane(groupDescription); // Add a scroll pane to the JTextArea
+        groupDescriptionScrollPane.setPreferredSize(new Dimension(300, 40));
+        groupDescriptionScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+
+        rightPanel.add(groupDescriptionScrollPane, BorderLayout.CENTER);
 
         add(rightPanel, BorderLayout.CENTER);
 
@@ -52,7 +63,7 @@ public class Groups extends JPanel {
         });
 
         JScrollPane groupListScrollPane = new JScrollPane(groupList);
-        groupListScrollPane.setPreferredSize(new Dimension(130, 340));
+        groupListScrollPane.setPreferredSize(new Dimension(130, 140));
 
         JPanel listPanel = new JPanel();
         listPanel.setLayout(new BoxLayout(listPanel, BoxLayout.PAGE_AXIS));
@@ -62,9 +73,13 @@ public class Groups extends JPanel {
 
         // Create a new JPanel for the buttons
         JPanel buttonPanel = new JPanel();
-        buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.Y_AXIS));// Create the buttons
-        JButton addGroupButton = new JButton("Add Group");
-        addGroupButton.setFont(new Font("Century Gothic", Font.PLAIN, 16));
+        GridBagLayout layout = new GridBagLayout();
+        buttonPanel.setLayout(layout);
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(10, 10, 10, 10);// Create the buttons
+        RoundedButton addGroupButton = new RoundedButton("Add Group");
+        addGroupButton.setFont(new Font("Century Gothic", Font.PLAIN, 12));
+        layout.setConstraints(addGroupButton, gbc);
         addGroupButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -75,8 +90,9 @@ public class Groups extends JPanel {
                 groupListModel.addElement(newGroup);
             }
         });
-        JButton deleteGroupButton = new JButton("Delete Group");
-        deleteGroupButton.setFont(new Font("Century Gothic", Font.PLAIN, 16));
+        RoundedButton deleteGroupButton = new RoundedButton("Delete Group");
+        deleteGroupButton.setFont(new Font("Century Gothic", Font.PLAIN, 12));
+        layout.setConstraints(deleteGroupButton, gbc);
         deleteGroupButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -94,8 +110,9 @@ public class Groups extends JPanel {
                 }
             }
         });
-        JButton editGroupButton = new JButton("Edit Group");
-        editGroupButton.setFont(new Font("Century Gothic", Font.PLAIN, 16));
+        RoundedButton editGroupButton = new RoundedButton("Edit Group");
+        editGroupButton.setFont(new Font("Century Gothic", Font.PLAIN, 12));
+        layout.setConstraints(editGroupButton, gbc);
         editGroupButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -112,8 +129,9 @@ public class Groups extends JPanel {
                 }
             }
         });
-        JButton searchGroupButton = new JButton("Search Group");
-        searchGroupButton.setFont(new Font("Century Gothic", Font.PLAIN, 16));
+        RoundedButton searchGroupButton = new RoundedButton("Search Group");
+        searchGroupButton.setFont(new Font("Century Gothic", Font.PLAIN, 12));
+        layout.setConstraints(searchGroupButton, gbc);
         searchGroupButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -128,12 +146,21 @@ public class Groups extends JPanel {
             }
         });
 
+        gbc.gridx = 1; // set gridx
+        gbc.gridy = 1; // set gridy
+        gbc.gridwidth = 2; // set gridwidth
+        gbc.gridheight = 5; // set gridheight
+        gbc.fill = GridBagConstraints.HORIZONTAL; // set fill
+
         // Add the buttons to the button panel
         buttonPanel.add(addGroupButton);
         buttonPanel.add(deleteGroupButton);
         buttonPanel.add(editGroupButton);
         buttonPanel.add(searchGroupButton);
-        buttonPanel.add(groupDescription, BorderLayout.EAST);
+
+        buttonPanel.add(groupDescriptionScrollPane, gbc); // add groupDescription to buttonPanel with gbc constraints
+
+        // buttonPanel.add(groupDescription, BorderLayout.EAST);
         // Add the button panel to the bottom of the Groups class
         add(buttonPanel, BorderLayout.SOUTH);
     }
