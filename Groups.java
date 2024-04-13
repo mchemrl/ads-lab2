@@ -5,12 +5,16 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+
+import uimodels.DescriptionField;
 import uimodels.RoundedButton;
 
 public class Groups extends JPanel {
     private JPanel rightPanel;
     private JLabel infoLabel;
-    private JTextArea groupDescription; // JTextArea for group description
+
+    private DescriptionField groupDescription;
+  //  private JTextArea groupDescription; // JTextArea for group description
     private ArrayList<ProductGroup> groups; // ArrayList of ProductGroup
     ProductGroup group;
     private DefaultListModel<ProductGroup> groupListModel; // Model for JList
@@ -28,20 +32,16 @@ public class Groups extends JPanel {
         infoLabel = new JLabel();
         rightPanel.add(infoLabel, BorderLayout.NORTH); // Add infoLabel to the top
 
-        groupDescription = new JTextArea(); // Initialize JTextArea
-        groupDescription.setEditable(false);
-        groupDescription.setLineWrap(true);
-        groupDescription.setWrapStyleWord(true);
+
+        groupDescription = new DescriptionField(); // Initialize JTextArea
+
         groupDescription.setFont(new Font("Century Gothic", Font.PLAIN, 13));
-        groupDescription.setRows(0);
-        groupDescription.setPreferredSize(new Dimension(150,40)); // Set the size
-        JScrollPane groupDescriptionScrollPane = new JScrollPane(groupDescription); // Add a scroll pane to the JTextArea
-        groupDescriptionScrollPane.setPreferredSize(new Dimension(300, 40));
-        groupDescriptionScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+      //  groupDescription.setPreferredSize(new Dimension(150, 100));
+        groupDescription.setText("                                                                                                                                                                                                                                                                                                                                                                                                                                                                     ");
 
-        rightPanel.add(groupDescriptionScrollPane, BorderLayout.CENTER);
 
-        add(rightPanel, BorderLayout.CENTER);
+
+
 
         JPanel leftPanel = new JPanel();
         leftPanel.setPreferredSize(new Dimension(150, 340));
@@ -56,9 +56,12 @@ public class Groups extends JPanel {
             @Override
             public void mouseClicked(MouseEvent e) {
                 ProductGroup selectedGroup = groupList.getSelectedValue();
-                infoLabel.setText("bla bla " + selectedGroup.getName());
-                groupDescription.setText(selectedGroup.getDescription()); // Update JTextArea with group description
-                selectedGroup = groupList.getSelectedValue();
+                if (selectedGroup != null) {
+                    infoLabel.setText("bla bla " + selectedGroup.getName());
+                    groupDescription.setText(selectedGroup.getDescription()); // Update JTextArea with group description
+                    groupDescription.revalidate(); // Revalidate the JTextArea
+                    groupDescription.repaint(); // Repaint the JTextArea
+                }
             }
         });
 
@@ -152,16 +155,18 @@ public class Groups extends JPanel {
         gbc.gridheight = 5; // set gridheight
         gbc.fill = GridBagConstraints.HORIZONTAL; // set fill
 
-        // Add the buttons to the button panel
         buttonPanel.add(addGroupButton);
         buttonPanel.add(deleteGroupButton);
         buttonPanel.add(editGroupButton);
         buttonPanel.add(searchGroupButton);
-
-        buttonPanel.add(groupDescriptionScrollPane, gbc); // add groupDescription to buttonPanel with gbc constraints
-
-        // buttonPanel.add(groupDescription, BorderLayout.EAST);
-        // Add the button panel to the bottom of the Groups class
+        gbc.gridx = 1; // set gridx
+        gbc.gridy = 5; // set gridy
+        gbc.gridwidth = 2; // set gridwidth
+        gbc.gridheight = 2; // set gridheight
+        gbc.weightx = 1; // request any extra horizontal space
+        gbc.weighty = 1; // request any extra vertical space
+        gbc.fill = GridBagConstraints.BOTH;
+         buttonPanel.add(groupDescription, gbc);
         add(buttonPanel, BorderLayout.SOUTH);
     }
 }

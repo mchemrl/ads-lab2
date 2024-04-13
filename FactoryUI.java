@@ -2,7 +2,7 @@ import javax.swing.*;
 import java.awt.*;
 public class FactoryUI extends JFrame {
     public FactoryUI() {
-        setSize(520, 720);
+        setSize(540, 720);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         JTabbedPane tabbedPane = new JTabbedPane();
