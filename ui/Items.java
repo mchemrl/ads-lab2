@@ -37,13 +37,9 @@ public class Items extends JPanel {
         RoundedButton deleteGroupButton = new  RoundedButton("Delete Item");
 
         // Додавання кнопок на панель
-    //    buttonPanel.add(Box.createVerticalStrut(20));
         buttonPanel.add(searchButton);
-      //  buttonPanel.add(Box.createVerticalStrut(10));
         buttonPanel.add(addGroupButton);
-        //buttonPanel.add(Box.createVerticalStrut(10));
         buttonPanel.add(deleteGroupButton);
-
 
         // Створення ComboBox перед викликом методу updateGroupComboBox()
         groupComboBox = new RoundedComboBox();
