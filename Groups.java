@@ -18,7 +18,10 @@ public class Groups extends JPanel {
     private ProductGroup selectedGroup;
     public Groups() {
         setLayout(new BorderLayout());
-
+        JLabel titleLabel = new JLabel("Groups of items");
+        titleLabel.setFont(new Font("Century Gothic", Font.BOLD, 20));
+        titleLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        add(titleLabel, BorderLayout.NORTH);
         rightPanel = new JPanel();
         rightPanel.setLayout(new BorderLayout()); // Set layout to BorderLayout
         infoLabel = new JLabel();
@@ -26,7 +29,6 @@ public class Groups extends JPanel {
 
         groupDescription = new JTextArea(); // Initialize JTextArea
         groupDescription.setEditable(false); // Make it non-editable
-        rightPanel.add(groupDescription, BorderLayout.CENTER); // Add it to the center
 
         add(rightPanel, BorderLayout.CENTER);
 
@@ -60,9 +62,7 @@ public class Groups extends JPanel {
 
         // Create a new JPanel for the buttons
         JPanel buttonPanel = new JPanel();
-        buttonPanel.setLayout(new GridLayout(2,2));
-        buttonPanel.getSize(new Dimension(150, 40));
-        // Create the buttons
+        buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.Y_AXIS));// Create the buttons
         JButton addGroupButton = new JButton("Add Group");
         addGroupButton.setFont(new Font("Century Gothic", Font.PLAIN, 16));
         addGroupButton.addActionListener(new ActionListener() {
@@ -133,7 +133,7 @@ public class Groups extends JPanel {
         buttonPanel.add(deleteGroupButton);
         buttonPanel.add(editGroupButton);
         buttonPanel.add(searchGroupButton);
-
+        buttonPanel.add(groupDescription, BorderLayout.EAST);
         // Add the button panel to the bottom of the Groups class
         add(buttonPanel, BorderLayout.SOUTH);
     }
