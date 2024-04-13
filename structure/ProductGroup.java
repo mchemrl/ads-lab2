@@ -7,6 +7,7 @@ public class ProductGroup {
     private String name;
     private String description;
     public static ArrayList <ProductGroup> groups = new ArrayList < >();
+    public static ArrayList <Product> products = new ArrayList<>();
 
     public ProductGroup(String name, String description) {
         this.name = name;
@@ -38,6 +39,7 @@ public class ProductGroup {
             e.printStackTrace();
         }
     }
+
     public String getName() {
         return name;
     }
@@ -49,7 +51,17 @@ public class ProductGroup {
 
         return groups;
     }
+    public ArrayList <Product> getProducts(){
+        return products;
+    }
+    public void addProduct(Product newProduct){
+        products.add(newProduct);
 
+    }
+    public void deleteProduct(Product newProduct){
+        products.remove(newProduct);
+
+    }
     @Override
     public String toString() {
         return name;
