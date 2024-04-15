@@ -63,7 +63,7 @@ public class ProductGroup {
                     String name = parts[0];
                     String description = parts[1];
                     ProductGroup newGroup = new ProductGroup(name, description, false);
-                    groups.add(newGroup);
+                   // groups.add(newGroup);
                     Groups.groupListModel.addElement(newGroup);
                     Items.updateGroupComboBox();
                 }

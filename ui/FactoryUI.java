@@ -4,6 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 import structure.ProductGroup;
+import structure.Product;
 
  public class FactoryUI extends JFrame {
     public FactoryUI() {
@@ -39,6 +40,6 @@ import structure.ProductGroup;
     public static void main(String[] args) {
         new FactoryUI();
         ProductGroup.loadGroupsFromFile();
-
+        Product.loadItemsFromFile();
     }
 }

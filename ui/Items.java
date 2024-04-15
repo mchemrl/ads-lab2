@@ -7,17 +7,21 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.JTableHeader;
 
 import structure.Product;
 import uimodels.RoundedButton;
 import uimodels.RoundedComboBox;
+import uimodels.Table;
+
 
 public class Items extends JPanel {
     private JTextArea productListTextArea;
     private JPanel productPanel;
     private static JComboBox<String> groupComboBox;
     private ArrayList<ProductGroup> existingGroups;
-
+private static Table productTable;
     public Items(ArrayList<ProductGroup> existingGroups) {
         setLayout(new BorderLayout());
         this.existingGroups = existingGroups;
@@ -26,45 +30,37 @@ public class Items extends JPanel {
         titleLabel.setHorizontalAlignment(SwingConstants.CENTER);
         add(titleLabel, BorderLayout.NORTH);
 
-        // Панель кнопок
-        JPanel buttonPanel = new JPanel();
-        buttonPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        JPanel  buttonPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 
-        // Кнопки
         RoundedButton searchButton = new RoundedButton("Search");
-        RoundedButton addGroupButton = new RoundedButton("Add Item");
-        RoundedButton deleteGroupButton = new RoundedButton("Delete Item");
+        RoundedButton addItemButton = new RoundedButton("Add Item");
+        RoundedButton deleteItemButton = new RoundedButton("Delete Item");
 
-        // Додавання кнопок на панель
         buttonPanel.add(searchButton);
-        buttonPanel.add(addGroupButton);
-        buttonPanel.add(deleteGroupButton);
+        buttonPanel.add(addItemButton);
+        buttonPanel.add(deleteItemButton);
 
-        // Створення ComboBox перед викликом методу updateGroupComboBox()
         groupComboBox = new RoundedComboBox();
         groupComboBox.setPreferredSize(new Dimension(220, 25));
-        // Додавання ComboBox на панель кнопок
-        buttonPanel.add(groupComboBox);
+        buttonPanel.add(groupComboBox); //комбобокс на панелі кнопок пох пон
 
-        // Додавання панелі кнопок на панель
         add(buttonPanel, BorderLayout.SOUTH);
 
-        // TextArea для виведення списку продуктів
-        productListTextArea = new JTextArea();
-        productListTextArea.setEditable(false);
-        productListTextArea.setFont(new Font("Century Gothic", Font.PLAIN, 16));
-        JScrollPane scrollPane = new JScrollPane(productListTextArea);
+        String[] columnNames = {"Group", "Name", "Description", "Manufacturer", "Quantity", "Price"};
+        Object[][] data = getProductData();
+
+        DefaultTableModel model = new DefaultTableModel(data, columnNames);
+        productTable = new Table(model);
+        productTable.setFillsViewportHeight(true);
+        JScrollPane scrollPane = new JScrollPane(productTable);
         add(scrollPane, BorderLayout.CENTER);
 
-        // Панель для виведення продуктів
         productPanel = new JPanel();
         productPanel.setLayout(new BoxLayout(productPanel, BoxLayout.Y_AXIS));
         JScrollPane productScrollPane = new JScrollPane(productPanel);
         add(productScrollPane, BorderLayout.EAST);
 
-        // Додавання дій до кнопок
-        addGroupButton.addActionListener(new ActionListener() {
-
+        addItemButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String selectedGroup = (String) groupComboBox.getSelectedItem();
@@ -108,23 +104,14 @@ public class Items extends JPanel {
                         }
                     }
                 }
+
+                // Create a new product and add it to the products list
                 Product newProduct = new Product(name, description, manufacturer, quantity, price);
-
-                productListTextArea.append("Group: " + selectedGroup + "\n");
-                productListTextArea.append("Name: " + name + "\n");
-                productListTextArea.append("Description: " + description + "\n");
-                productListTextArea.append("Manufacturer: " + manufacturer + "\n");
-                productListTextArea.append("Quantity: " + quantity + "\n");
-                productListTextArea.append("Price: " + price + "\n\n");
-
-                JLabel productLabel = new JLabel("<html><b>Group:</b> " + selectedGroup + ", <b>Name:</b> " + name + ", <b>Quantity:</b> " + quantity + ", <b>Price:</b> " + price + "</html>");
-                productLabel.setFont(new Font("Century Gothic", Font.PLAIN, 20));
-                productPanel.add(productLabel);
-                productPanel.revalidate();
-                productPanel.repaint();
-            }
+                newProduct.setGroup(selectedGroup);
+                Product.getProducts().add(newProduct);
+                DefaultTableModel model = (DefaultTableModel) productTable.getModel();
+                model.addRow(new Object[]{newProduct.getGroup(), newProduct.getName(), newProduct.getDescription(), newProduct.getManufacturer(), newProduct.getQuantity(), newProduct.getPrice()});}
         });
-
         searchButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -139,14 +126,14 @@ public class Items extends JPanel {
             }
         });
 
-        deleteGroupButton.addActionListener(new ActionListener() {
+        deleteItemButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String selectedGroup = (String) groupComboBox.getSelectedItem();
                 if (selectedGroup != null) {
                     int confirm = JOptionPane.showConfirmDialog(null, "Are you sure you want to delete group \"" + selectedGroup + "\"?", "Confirm Delete", JOptionPane.YES_NO_OPTION);
                     if (confirm == JOptionPane.YES_OPTION) {
-                        // Delete group logic
+                        // delete group logic
                         for (ProductGroup group : existingGroups) {
                             if (group.getName().equals(selectedGroup)) {
                                 ProductGroup.deleteGroup(group);
@@ -154,7 +141,6 @@ public class Items extends JPanel {
                             }
                         }
                         JOptionPane.showMessageDialog(null, "Group \"" + selectedGroup + "\" deleted successfully.");
-                       // updateGroupComboBox(); // Оновлення ComboBox після видалення
                     }
                 } else {
                     JOptionPane.showMessageDialog(null, "No group selected.", "Error", JOptionPane.ERROR_MESSAGE);
@@ -163,7 +149,7 @@ public class Items extends JPanel {
         });
     }
 
-    // Оновлення ComboBox на основі актуальних даних
+    // updates combobox!!
     public static void updateGroupComboBox() {
         System.out.println("updateGroupComboBox called"); // Debugging line
         ArrayList<String> groupNames = new ArrayList<>();
@@ -176,6 +162,24 @@ public class Items extends JPanel {
         groupComboBox.setModel(new DefaultComboBoxModel<>(groupNames.toArray(new String[0])));
     }
 
+    public static void updateProductTable(Product newProduct) {
+        DefaultTableModel model = (DefaultTableModel) productTable.getModel();
+        model.addRow(new Object[]{newProduct.getGroup(), newProduct.getName(), newProduct.getDescription(), newProduct.getManufacturer(), newProduct.getQuantity(), newProduct.getPrice()});
+    }
+    private static Object[][] getProductData() {
+        ArrayList<Product> products = Product.getProducts();
+        Object[][] data = new Object[products.size()][6];
+        for (int i = 0; i < products.size(); i++) {
+            Product product = products.get(i);
+            data[i][0] = product.getGroup();
+            data[i][1] = product.getName();
+            data[i][2] = product.getDescription();
+            data[i][3] = product.getManufacturer();
+            data[i][4] = product.getQuantity();
+            data[i][5] = product.getPrice();
+        }
+        return data;
+    }
 
 
 }
