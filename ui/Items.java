@@ -1,6 +1,5 @@
 package ui;
 
-import structure.GroupObserver;
 import structure.ProductGroup;
 
 import javax.swing.*;
@@ -8,12 +7,12 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import structure.ProductGroup;
+
 import structure.Product;
 import uimodels.RoundedButton;
 import uimodels.RoundedComboBox;
 
-public class Items extends JPanel implements GroupObserver {
+public class Items extends JPanel {
     private JTextArea productListTextArea;
     private JPanel productPanel;
     private static JComboBox<String> groupComboBox;
@@ -176,10 +175,6 @@ public class Items extends JPanel implements GroupObserver {
         groupComboBox.setModel(new DefaultComboBoxModel<>(groupNames.toArray(new String[0])));
     }
 
-    @Override
-    public void groupAdded(ProductGroup group) {
-        updateGroupComboBox();
-    }
 
 
 }

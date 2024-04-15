@@ -13,18 +13,16 @@ import uimodels.DescriptionField;
 import uimodels.GroupList;
 import uimodels.RoundedButton;
 import uimodels.RoundedTextField;
-import structure.GroupObserver;
+
 public class Groups extends JPanel {
     private JPanel rightPanel;
     private JLabel infoLabel;
     private DescriptionField groupDescription;
   //  private JTextArea groupDescription; // JTextArea for group description
-    ProductGroup group;
     private DefaultListModel<ProductGroup> groupListModel; // Model for JList
    // private JList<structure.ProductGroup> groupList; // JList of structure.ProductGroup
 private GroupList groupList;
     private ProductGroup selectedGroup;
-    private ArrayList<GroupObserver> observers = new ArrayList<>();
 
 
     public Groups() {
@@ -275,9 +273,6 @@ private GroupList groupList;
 
 
 
-    }
-    public void addObserver(GroupObserver observer) {
-        observers.add(observer);
     }
 
 }

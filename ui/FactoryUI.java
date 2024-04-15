@@ -4,10 +4,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 import structure.ProductGroup;
-import structure.Product;
-import structure.GroupObserver;
 
-public class FactoryUI extends JFrame {
+ public class FactoryUI extends JFrame {
     public FactoryUI() {
         setSize(540, 720);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
