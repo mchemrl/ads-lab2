@@ -167,8 +167,9 @@ public class Items extends JPanel {
     public static void updateGroupComboBox() {
         System.out.println("updateGroupComboBox called"); // Debugging line
         ArrayList<String> groupNames = new ArrayList<>();
+        if(groupComboBox.getItemAt(0) != null) {
 
-        groupComboBox.removeAllItems();
+        groupComboBox.removeAllItems();}
         for (ProductGroup group : ProductGroup.groups) {
             groupNames.add(group.getName());
         }

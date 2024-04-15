@@ -18,17 +18,12 @@ public class Groups extends JPanel {
     private JPanel rightPanel;
     private JLabel infoLabel;
     private DescriptionField groupDescription;
-  //  private JTextArea groupDescription; // JTextArea for group description
-    private DefaultListModel<ProductGroup> groupListModel; // Model for JList
-   // private JList<structure.ProductGroup> groupList; // JList of structure.ProductGroup
-private GroupList groupList;
+    public static DefaultListModel<ProductGroup> groupListModel; // Model for JList
+    private GroupList groupList;
     private ProductGroup selectedGroup;
 
 
     public Groups() {
-
-
-
 
         setBackground(Color.WHITE);
         setLayout(new BorderLayout());
@@ -37,28 +32,22 @@ private GroupList groupList;
         titleLabel.setHorizontalAlignment(SwingConstants.CENTER);
         add(titleLabel, BorderLayout.NORTH);
         rightPanel = new JPanel();
-        rightPanel.setLayout(new BorderLayout()); // Set layout to BorderLayout
+        rightPanel.setLayout(new BorderLayout());
         infoLabel = new JLabel();
-        rightPanel.add(infoLabel, BorderLayout.NORTH); // Add infoLabel to the top
+        rightPanel.add(infoLabel, BorderLayout.NORTH);
 
-        groupDescription = new DescriptionField(); // Initialize JTextArea
+        groupDescription = new DescriptionField();
 
         groupDescription.setFont(new Font("Century Gothic", Font.PLAIN, 13));
-      //  groupDescription.setPreferredSize(new Dimension(150, 100));
         groupDescription.setText("                                                                                                                                                                                                                                                                                                                                                                                                                                                                     ");
-
-
-
-
 
         JPanel leftPanel = new JPanel();
         leftPanel.setPreferredSize(new Dimension(150, 340));
         leftPanel.setLayout(new BorderLayout());
         add(leftPanel, BorderLayout.WEST);
 
-       // groups = new ArrayList<>(); // Initialize ArrayList
-        groupListModel = new DefaultListModel<>(); // Initialize DefaultListModel
-        groupList = new GroupList(groupListModel); // Initialize JList with DefaultListModel
+        groupListModel = new DefaultListModel<>();
+        groupList = new GroupList(groupListModel);
         groupList.getGroupList().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         groupList.getGroupList().addMouseListener(new MouseAdapter() {
             @Override
@@ -125,7 +114,7 @@ private GroupList groupList;
                     public void actionPerformed(ActionEvent e) {
                         String name = nameField.getText();
                         String description = descriptionField.getText();
-                        ProductGroup newGroup = new ProductGroup(name, description);
+                        ProductGroup newGroup = new ProductGroup(name, description, true);
                         groupListModel.addElement(newGroup);
                         Items.updateGroupComboBox();
                         Window win = SwingUtilities.getWindowAncestor(saveButton);
@@ -152,14 +141,11 @@ private GroupList groupList;
             public void actionPerformed(ActionEvent e) {
                 ProductGroup selectedGroup = groupList.getSelectedValue();
                 if (selectedGroup != null) {
-                    // Remove the selected group from the JList
                     groupListModel.removeElement(selectedGroup);
-                    // Remove the selected group from the ArrayList
                     ProductGroup.groups.remove(selectedGroup);
-                    // Remove the selected group from the file
                     ProductGroup.deleteGroup(selectedGroup);
-                    // Rewrite the file
-                    new ProductGroup("", "").writeGroupNamesToFile();
+                  //  new ProductGroup("", "", true).writeGroupsToFile();
+                    Items.updateGroupComboBox();
                 }
             }
         });
@@ -201,7 +187,7 @@ private GroupList groupList;
                         public void actionPerformed(ActionEvent e) {
                             String name = nameField.getText();
                             String description = descriptionField.getText();
-                            ProductGroup newGroup = new ProductGroup(name, description);
+                            ProductGroup newGroup = new ProductGroup(name, description, true);
 
                             int indexInArrayList = ProductGroup.groups.indexOf(selectedGroup);
                             int indexInListModel = groupListModel.indexOf(selectedGroup);

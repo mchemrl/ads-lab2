@@ -37,8 +37,8 @@ import structure.ProductGroup;
     }
 
     public static void main(String[] args) {
-
-        // Add itemsPanel as an observer to groupsPanel
         new FactoryUI();
+        ProductGroup.loadGroupsFromFile();
+
     }
 }
