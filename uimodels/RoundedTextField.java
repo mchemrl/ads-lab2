@@ -10,6 +10,8 @@ public class RoundedTextField extends JTextField {
         super();
         this.radius = radius;
         setOpaque(false);
+        setMargin(new Insets(10, 10, 10, 10)); // Add 10 pixels of margin on all sides
+
     }
 
     @Override

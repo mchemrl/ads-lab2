@@ -100,19 +100,31 @@ private GroupList groupList;
                 RoundedTextField descriptionField = new RoundedTextField(15);
 
                 JPanel panel = new JPanel();
-                panel.setLayout(new GridLayout(0, 1));
-                panel.add(new JLabel("Enter group name:"));
+                panel.setLayout(new GridLayout(0, 2));
+
+                JLabel label = new JLabel("Enter group name:");
+                label.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+                panel.add(label);
+
+                nameField.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
                 panel.add(nameField);
-                panel.add(new JLabel("Enter group description:"));
+
+                JLabel label2 = new JLabel("Enter group description:");
+                label2.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+                panel.add(label2);
+
+                descriptionField.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
                 panel.add(descriptionField);
 
                 RoundedButton saveButton = new RoundedButton("Save");
                 saveButton.setPreferredSize(new Dimension(10, 30));
+                saveButton.setMargin(new Insets(5, 5, 5, 5));
 
-                JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-                buttonPanel.add(saveButton);
+                JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+                buttonPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+                buttonPanel.add(saveButton, BorderLayout.CENTER);
 
-                panel.add(buttonPanel);
+                panel.add(buttonPanel, BorderLayout.CENTER);
                 saveButton.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
@@ -144,6 +156,8 @@ private GroupList groupList;
             @Override
             public void actionPerformed(ActionEvent e) {
                 // Get the selected group
+
+
                 ProductGroup selectedGroup = groupList.getSelectedValue();
                 if (selectedGroup != null) {
                     // Remove the selected group from the JList
@@ -165,26 +179,34 @@ private GroupList groupList;
             public void actionPerformed(ActionEvent e) {
                 ProductGroup selectedGroup = groupList.getSelectedValue();
                 if (selectedGroup != null) {
+
+                    JPanel panel = new JPanel();
+                    panel.setLayout(new GridLayout(0, 2));
+
                     RoundedTextField nameField = new RoundedTextField(15);
                     nameField.setText(selectedGroup.getName());
                     RoundedTextField descriptionField = new RoundedTextField(15);
                     descriptionField.setText(selectedGroup.getDescription());
 
-                    JPanel panel = new JPanel();
-                    panel.setLayout(new GridLayout(0, 1));
-                    panel.add(new JLabel("Enter new group name:"));
+                    JLabel label1 = new JLabel("Enter new group name:");
+                    label1.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+                    panel.add(label1);
+
                     panel.add(nameField);
-                    panel.add(new JLabel("Enter new group description:"));
+
+                    JLabel label2 = new JLabel("Enter new group description:");
+                    label2.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+                    panel.add(label2);
+
+
                     panel.add(descriptionField);
 
-                    JButton saveButton = new JButton("Save");
-                    saveButton.setPreferredSize(new Dimension(10, 30));
+                    RoundedButton saveButton = new RoundedButton("Save");
+                    saveButton.setPreferredSize(new Dimension(100, 30));
 
                     JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
                     buttonPanel.add(saveButton);
-
                     panel.add(buttonPanel);
-                   // panel.add(saveButton);
 
                     saveButton.addActionListener(new ActionListener() {
                         @Override
@@ -192,8 +214,18 @@ private GroupList groupList;
                             String name = nameField.getText();
                             String description = descriptionField.getText();
                             ProductGroup newGroup = new ProductGroup(name, description);
-                            ProductGroup.groups.add(newGroup);
-                            groupListModel.addElement(newGroup);
+
+                            int indexInArrayList = ProductGroup.groups.indexOf(selectedGroup);
+                            int indexInListModel = groupListModel.indexOf(selectedGroup);
+
+                            if (indexInArrayList != -1) {
+                                ProductGroup.groups.remove(selectedGroup);
+                            }
+                            if (indexInListModel != -1) {
+                                groupListModel.set(indexInListModel, newGroup);
+                            }
+
+                            Items.updateGroupComboBox();
                            // notifyObservers(newGroup); // Notify observers
                             Window win = SwingUtilities.getWindowAncestor(saveButton);
                             if (win != null) {
