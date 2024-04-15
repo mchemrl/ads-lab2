@@ -106,7 +106,7 @@ private GroupList groupList;
                 panel.add(new JLabel("Enter group description:"));
                 panel.add(descriptionField);
 
-                JButton saveButton = new JButton("Save");
+                RoundedButton saveButton = new RoundedButton("Save");
                 saveButton.setPreferredSize(new Dimension(10, 30));
 
                 JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
@@ -119,9 +119,8 @@ private GroupList groupList;
                         String name = nameField.getText();
                         String description = descriptionField.getText();
                         ProductGroup newGroup = new ProductGroup(name, description);
-                        ProductGroup.groups.add(newGroup);
                         groupListModel.addElement(newGroup);
-                       Items.updateGroupComboBox(); // Update the groupComboBox
+                        Items.updateGroupComboBox();
                         Window win = SwingUtilities.getWindowAncestor(saveButton);
                         if (win != null) {
                             win.dispose();
@@ -250,17 +249,11 @@ private GroupList groupList;
          buttonPanel.setBackground(Color.getHSBColor(2.0f/100, 0.0f/100, 98.0f/100));
         add(buttonPanel, BorderLayout.SOUTH);
 
-        ProductGroup lala = new ProductGroup("lala", "lala");
-        ProductGroup.groups.add(lala);
-        groupListModel.addElement(lala);
+
 
     }
     public void addObserver(GroupObserver observer) {
         observers.add(observer);
     }
-    private void notifyObservers(ProductGroup group) {
-        for (GroupObserver observer : observers) {
-            observer.groupAdded(group);
-        }
-    }
+
 }

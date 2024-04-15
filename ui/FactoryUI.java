@@ -39,12 +39,8 @@ public class FactoryUI extends JFrame {
     }
 
     public static void main(String[] args) {
-        Groups groupsPanel = new Groups();
-        ArrayList<ProductGroup> existingGroups = ProductGroup.getExistingGroups();
-        Items itemsPanel = new Items(existingGroups);
 
         // Add itemsPanel as an observer to groupsPanel
-        groupsPanel.addObserver(itemsPanel);
         new FactoryUI();
     }
 }

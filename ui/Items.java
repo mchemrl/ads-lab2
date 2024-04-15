@@ -155,27 +155,26 @@ public class Items extends JPanel implements GroupObserver {
                             }
                         }
                         JOptionPane.showMessageDialog(null, "Group \"" + selectedGroup + "\" deleted successfully.");
-                        updateGroupComboBox(); // Оновлення ComboBox після видалення
+                       // updateGroupComboBox(); // Оновлення ComboBox після видалення
                     }
                 } else {
                     JOptionPane.showMessageDialog(null, "No group selected.", "Error", JOptionPane.ERROR_MESSAGE);
                 }
             }
         });
-
-        updateGroupComboBox(); // Оновлення ComboBox
     }
 
     // Оновлення ComboBox на основі актуальних даних
     public static void updateGroupComboBox() {
+        System.out.println("updateGroupComboBox called"); // Debugging line
         ArrayList<String> groupNames = new ArrayList<>();
-        // Access the groups ArrayList from the Groups class
+
+        groupComboBox.removeAllItems();
         for (ProductGroup group : ProductGroup.groups) {
             groupNames.add(group.getName());
-        } // vika cringe
+        }
         groupComboBox.setModel(new DefaultComboBoxModel<>(groupNames.toArray(new String[0])));
     }
-
 
     @Override
     public void groupAdded(ProductGroup group) {
