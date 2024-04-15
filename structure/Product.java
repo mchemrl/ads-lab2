@@ -8,8 +8,12 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.HashSet;
 
+import structure.ProductGroup;
+import ui.Items;
+import uimodels.Table;
+
 public class Product {
-    String group;
+    ProductGroup group;
     String name;
     String description;
     String manufacturer;
@@ -18,12 +22,13 @@ public class Product {
    static ArrayList<Product> products = new ArrayList<>();
 
     // constructor for product
-    public Product(String name, String description, String manufacturer, int quantity, double price) {
+    public Product(String name, String description, String manufacturer, int quantity, double price, ProductGroup group) {
         this.name = name;
         this.description = description;
         this.manufacturer = manufacturer;
         this.quantity = quantity;
         this.price = price;
+        this.group = group;
         products.add(this);
         writeItemsToFile();
     }
@@ -54,14 +59,14 @@ public class Product {
             while ((line = reader.readLine()) != null) {
                 String[] parts = line.split(" - ");
                 if (parts.length >= 6) {
-                    String group = parts[0];
+                    ProductGroup group = ProductGroup.findGroupByName(parts[0]);
                     String name = parts[1];
                     String description = parts[2];
                     String manufacturer = parts[3];
                     int quantity = Integer.parseInt(parts[4]);
                     double price = Double.parseDouble(parts[5]);
-                    Product newProduct = new Product(name, description, manufacturer, quantity, price);
-                    newProduct.setGroup(group);
+                    Product newProduct = new Product(name, description, manufacturer, quantity, price, group);
+                //    newProduct.setGroup(group);
                     Product.getProducts().add(newProduct);
                     Items.updateProductTable(newProduct);
                 }
@@ -100,11 +105,11 @@ public class Product {
     public static ArrayList<Product> getProducts() {
         return products;
     }
-    public String getGroup() {
+    public ProductGroup getGroup() {
         return group;
     }
 
-    public void setGroup(String group) {
+    public void setGroup(ProductGroup group) {
         this.group = group;
     }
 

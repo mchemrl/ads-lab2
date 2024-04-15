@@ -104,11 +104,12 @@ private static Table productTable;
                         }
                     }
                 }
-
+                ProductGroup group = ProductGroup.findGroupByName(selectedGroup);
                 // Create a new product and add it to the products list
-                Product newProduct = new Product(name, description, manufacturer, quantity, price);
-                newProduct.setGroup(selectedGroup);
+                Product newProduct = new Product(name, description, manufacturer, quantity, price, group);
+                newProduct.setGroup(ProductGroup.findGroupByName(selectedGroup));
                 Product.getProducts().add(newProduct);
+                newProduct.setGroup(ProductGroup.findGroupByName(selectedGroup));
                 DefaultTableModel model = (DefaultTableModel) productTable.getModel();
                 model.addRow(new Object[]{newProduct.getGroup(), newProduct.getName(), newProduct.getDescription(), newProduct.getManufacturer(), newProduct.getQuantity(), newProduct.getPrice()});}
         });

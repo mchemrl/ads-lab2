@@ -96,8 +96,15 @@ public class ProductGroup {
         products.remove(newProduct);
 
     }
+    public static ProductGroup findGroupByName(String name) {
+    for (ProductGroup group : groups) {
+            if (group.getName().equals(name)) {
+                return group;
+            }
+        }
+        return null;}
+
     @Override
     public String toString() {
-        return name;
-    }
-}
+        return this.name; // Assuming 'name' is the group name
+    }}
