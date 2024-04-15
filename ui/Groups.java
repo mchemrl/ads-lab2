@@ -13,20 +13,25 @@ import uimodels.DescriptionField;
 import uimodels.GroupList;
 import uimodels.RoundedButton;
 import uimodels.RoundedTextField;
-
+import structure.GroupObserver;
 public class Groups extends JPanel {
     private JPanel rightPanel;
     private JLabel infoLabel;
-
     private DescriptionField groupDescription;
   //  private JTextArea groupDescription; // JTextArea for group description
-    public ArrayList<ProductGroup> groups; // ArrayList of structure.ProductGroup
     ProductGroup group;
     private DefaultListModel<ProductGroup> groupListModel; // Model for JList
    // private JList<structure.ProductGroup> groupList; // JList of structure.ProductGroup
 private GroupList groupList;
     private ProductGroup selectedGroup;
+    private ArrayList<GroupObserver> observers = new ArrayList<>();
+
+
     public Groups() {
+
+
+
+
         setBackground(Color.WHITE);
         setLayout(new BorderLayout());
         JLabel titleLabel = new JLabel("Groups of items");
@@ -53,7 +58,7 @@ private GroupList groupList;
         leftPanel.setLayout(new BorderLayout());
         add(leftPanel, BorderLayout.WEST);
 
-        groups = new ArrayList<>(); // Initialize ArrayList
+       // groups = new ArrayList<>(); // Initialize ArrayList
         groupListModel = new DefaultListModel<>(); // Initialize DefaultListModel
         groupList = new GroupList(groupListModel); // Initialize JList with DefaultListModel
         groupList.getGroupList().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -101,7 +106,7 @@ private GroupList groupList;
                 panel.add(new JLabel("Enter group description:"));
                 panel.add(descriptionField);
 
-                RoundedButton saveButton = new RoundedButton("Save");
+                JButton saveButton = new JButton("Save");
                 saveButton.setPreferredSize(new Dimension(10, 30));
 
                 JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
@@ -114,8 +119,9 @@ private GroupList groupList;
                         String name = nameField.getText();
                         String description = descriptionField.getText();
                         ProductGroup newGroup = new ProductGroup(name, description);
-                        groups.add(newGroup);
+                        ProductGroup.groups.add(newGroup);
                         groupListModel.addElement(newGroup);
+                       Items.updateGroupComboBox(); // Update the groupComboBox
                         Window win = SwingUtilities.getWindowAncestor(saveButton);
                         if (win != null) {
                             win.dispose();
@@ -144,7 +150,7 @@ private GroupList groupList;
                     // Remove the selected group from the JList
                     groupListModel.removeElement(selectedGroup);
                     // Remove the selected group from the ArrayList
-                    groups.remove(selectedGroup);
+                    ProductGroup.groups.remove(selectedGroup);
                     // Remove the selected group from the file
                     ProductGroup.deleteGroup(selectedGroup);
                     // Rewrite the file
@@ -172,32 +178,30 @@ private GroupList groupList;
                     panel.add(new JLabel("Enter new group description:"));
                     panel.add(descriptionField);
 
-                    RoundedButton saveButton = new RoundedButton("Save");
+                    JButton saveButton = new JButton("Save");
                     saveButton.setPreferredSize(new Dimension(10, 30));
 
                     JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
                     buttonPanel.add(saveButton);
 
                     panel.add(buttonPanel);
+                   // panel.add(saveButton);
+
                     saveButton.addActionListener(new ActionListener() {
                         @Override
                         public void actionPerformed(ActionEvent e) {
                             String name = nameField.getText();
                             String description = descriptionField.getText();
-                            // Edit the group
-                            ProductGroup.editGroup(selectedGroup, name, description);
-                            // Update the JList
-                            groupListModel.setElementAt(selectedGroup, groupList.getGroupList().getSelectedIndex());
-                            // Update the groupDescription field
-                            groupDescription.setText(description);
+                            ProductGroup newGroup = new ProductGroup(name, description);
+                            ProductGroup.groups.add(newGroup);
+                            groupListModel.addElement(newGroup);
+                           // notifyObservers(newGroup); // Notify observers
                             Window win = SwingUtilities.getWindowAncestor(saveButton);
                             if (win != null) {
                                 win.dispose();
                             }
                         }
                     });
-
-                    panel.add(saveButton);
 
                     JDialog dialog = new JDialog();
                     dialog.setModal(true);
@@ -215,7 +219,7 @@ private GroupList groupList;
             @Override
             public void actionPerformed(ActionEvent e) {
                 String search = JOptionPane.showInputDialog("Enter group name to search");
-                for (ProductGroup group : groups) {
+                for (ProductGroup group : ProductGroup.groups) {
                     if (group.getName().equals(search)) {
                         groupList.getGroupList().setSelectedValue(group, true);
                         return;
@@ -245,5 +249,18 @@ private GroupList groupList;
          buttonPanel.add(groupDescription, gbc);
          buttonPanel.setBackground(Color.getHSBColor(2.0f/100, 0.0f/100, 98.0f/100));
         add(buttonPanel, BorderLayout.SOUTH);
+
+        ProductGroup lala = new ProductGroup("lala", "lala");
+        ProductGroup.groups.add(lala);
+        groupListModel.addElement(lala);
+
+    }
+    public void addObserver(GroupObserver observer) {
+        observers.add(observer);
+    }
+    private void notifyObservers(ProductGroup group) {
+        for (GroupObserver observer : observers) {
+            observer.groupAdded(group);
+        }
     }
 }

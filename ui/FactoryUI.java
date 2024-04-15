@@ -1,17 +1,17 @@
-package ui;
-
-import structure.ProductGroup;
+ package ui;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
+import structure.ProductGroup;
+import structure.Product;
+import structure.GroupObserver;
 
 public class FactoryUI extends JFrame {
     public FactoryUI() {
         setSize(540, 720);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         getContentPane().setBackground(Color.getHSBColor(10, 35,270)); // Replace with your preferred color
-
 
         JTabbedPane tabbedPane = new JTabbedPane();
         tabbedPane.setFont(new Font("Century Gothic", Font.PLAIN, 14));
@@ -22,8 +22,8 @@ public class FactoryUI extends JFrame {
         Statistics tab3 = new Statistics();
 
         tab1.setBackground(Color.getHSBColor(2.0f/100, 4.0f/100, 98.0f/100));
-tab2.setBackground(Color.getHSBColor(2.0f/100, 4.0f/100, 98.0f/100));
-tab3.setBackground(Color.getHSBColor(2.0f/100, 4.0f/100, 98.0f/100));
+        tab2.setBackground(Color.getHSBColor(2.0f/100, 4.0f/100, 98.0f/100));
+        tab3.setBackground(Color.getHSBColor(2.0f/100, 4.0f/100, 98.0f/100));
 
         tabbedPane.addTab("Groups of items", tab1);
         tabbedPane.addTab("Items", tab2);
@@ -38,8 +38,13 @@ tab3.setBackground(Color.getHSBColor(2.0f/100, 4.0f/100, 98.0f/100));
         setVisible(true);
     }
 
-
     public static void main(String[] args) {
+        Groups groupsPanel = new Groups();
+        ArrayList<ProductGroup> existingGroups = ProductGroup.getExistingGroups();
+        Items itemsPanel = new Items(existingGroups);
+
+        // Add itemsPanel as an observer to groupsPanel
+        groupsPanel.addObserver(itemsPanel);
         new FactoryUI();
     }
 }

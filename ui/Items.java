@@ -1,5 +1,6 @@
 package ui;
 
+import structure.GroupObserver;
 import structure.ProductGroup;
 
 import javax.swing.*;
@@ -12,12 +13,11 @@ import structure.Product;
 import uimodels.RoundedButton;
 import uimodels.RoundedComboBox;
 
-public class Items extends JPanel {
+public class Items extends JPanel implements GroupObserver {
     private JTextArea productListTextArea;
     private JPanel productPanel;
-    private JComboBox<String> groupComboBox;
+    private static JComboBox<String> groupComboBox;
     private ArrayList<ProductGroup> existingGroups;
-
 
     public Items(ArrayList<ProductGroup> existingGroups) {
         setLayout(new BorderLayout());
@@ -167,13 +167,19 @@ public class Items extends JPanel {
     }
 
     // Оновлення ComboBox на основі актуальних даних
-    private void updateGroupComboBox() {
-        this.existingGroups = ProductGroup.getExistingGroups(); // Оновлення списку груп
+    public static void updateGroupComboBox() {
         ArrayList<String> groupNames = new ArrayList<>();
-        for (ProductGroup group : existingGroups) {
+        // Access the groups ArrayList from the Groups class
+        for (ProductGroup group : ProductGroup.groups) {
             groupNames.add(group.getName());
-        }
+        } // vika cringe
         groupComboBox.setModel(new DefaultComboBoxModel<>(groupNames.toArray(new String[0])));
+    }
+
+
+    @Override
+    public void groupAdded(ProductGroup group) {
+        updateGroupComboBox();
     }
 
 
