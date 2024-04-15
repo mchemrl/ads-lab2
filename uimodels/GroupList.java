@@ -27,7 +27,11 @@ public class GroupList extends JPanel {
             public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
                 JLabel label = (JLabel) super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
                 label.setBorder(new LineBorder(Color.getHSBColor(10, 35,230), 1, true));
-                label.setBackground(Color.white);
+                if (isSelected) {
+                    label.setBackground(Color.getHSBColor(101, 120,180)); // Change to your preferred highlight color
+                } else {
+                    label.setBackground(Color.white);
+                }
                 label.setOpaque(true);
                 label.setHorizontalAlignment(JLabel.CENTER); // Center the label horizontally
                 label.setVerticalAlignment(JLabel.CENTER); // Center the label vertically

@@ -115,16 +115,13 @@ private GroupList groupList;
 
                 descriptionField.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
                 panel.add(descriptionField);
-
                 RoundedButton saveButton = new RoundedButton("Save");
-                saveButton.setPreferredSize(new Dimension(10, 30));
-                saveButton.setMargin(new Insets(5, 5, 5, 5));
+                saveButton.setPreferredSize(new Dimension(100, 30));
 
-                JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-                buttonPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-                buttonPanel.add(saveButton, BorderLayout.CENTER);
+                JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+                buttonPanel.add(saveButton);
+                panel.add(buttonPanel);
 
-                panel.add(buttonPanel, BorderLayout.CENTER);
                 saveButton.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
@@ -155,9 +152,6 @@ private GroupList groupList;
         deleteGroupButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // Get the selected group
-
-
                 ProductGroup selectedGroup = groupList.getSelectedValue();
                 if (selectedGroup != null) {
                     // Remove the selected group from the JList
@@ -177,38 +171,34 @@ private GroupList groupList;
         editGroupButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                ProductGroup selectedGroup = groupList.getSelectedValue();
-                if (selectedGroup != null) {
+                RoundedTextField nameField = new RoundedTextField(15);
+                RoundedTextField descriptionField = new RoundedTextField(15);
 
-                    JPanel panel = new JPanel();
-                    panel.setLayout(new GridLayout(0, 2));
+                JPanel panel = new JPanel();
+                panel.setLayout(new GridLayout(0, 2));
 
-                    RoundedTextField nameField = new RoundedTextField(15);
-                    nameField.setText(selectedGroup.getName());
-                    RoundedTextField descriptionField = new RoundedTextField(15);
-                    descriptionField.setText(selectedGroup.getDescription());
+                JLabel label = new JLabel("Enter group name:");
+                label.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+                panel.add(label);
 
-                    JLabel label1 = new JLabel("Enter new group name:");
-                    label1.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-                    panel.add(label1);
+                nameField.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+                panel.add(nameField);
 
-                    panel.add(nameField);
+                JLabel label2 = new JLabel("Enter group description:");
+                label2.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+                panel.add(label2);
 
-                    JLabel label2 = new JLabel("Enter new group description:");
-                    label2.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-                    panel.add(label2);
+                descriptionField.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+                panel.add(descriptionField);
+                RoundedButton saveButton = new RoundedButton("Save");
+                saveButton.setPreferredSize(new Dimension(100, 30));
+
+                JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+                buttonPanel.add(saveButton);
+                panel.add(buttonPanel);
 
 
-                    panel.add(descriptionField);
-
-                    RoundedButton saveButton = new RoundedButton("Save");
-                    saveButton.setPreferredSize(new Dimension(100, 30));
-
-                    JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-                    buttonPanel.add(saveButton);
-                    panel.add(buttonPanel);
-
-                    saveButton.addActionListener(new ActionListener() {
+                saveButton.addActionListener(new ActionListener() {
                         @Override
                         public void actionPerformed(ActionEvent e) {
                             String name = nameField.getText();
@@ -234,15 +224,17 @@ private GroupList groupList;
                         }
                     });
 
-                    JDialog dialog = new JDialog();
+                panel.add(saveButton);
+
+
+                JDialog dialog = new JDialog();
                     dialog.setModal(true);
                     dialog.getContentPane().add(panel);
                     dialog.pack();
                     dialog.setLocationRelativeTo(null);
                     dialog.setVisible(true);
                 }
-            }
-        });
+            });
         RoundedButton searchGroupButton = new RoundedButton("Search Group");
         searchGroupButton.setFont(new Font("Century Gothic", Font.PLAIN, 12));
         layout.setConstraints(searchGroupButton, gbc);
