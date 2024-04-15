@@ -65,7 +65,7 @@ public class ProductGroup {
                     ProductGroup newGroup = new ProductGroup(name, description, false);
                    // groups.add(newGroup);
                     Groups.groupListModel.addElement(newGroup);
-                    Items.updateGroupComboBox();
+              //      Items.updateGroupComboBox();
                 }
             }
             reader.close();

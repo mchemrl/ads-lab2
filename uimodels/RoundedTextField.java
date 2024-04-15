@@ -9,9 +9,8 @@ public class RoundedTextField extends JTextField {
     public RoundedTextField(int radius) {
         super();
         this.radius = radius;
-        setOpaque(false);
         setMargin(new Insets(10, 10, 10, 10)); // Add 10 pixels of margin on all sides
-
+        setForeground(Color.BLACK); // Set the text color to black
     }
 
     @Override

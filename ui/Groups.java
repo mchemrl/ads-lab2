@@ -116,7 +116,7 @@ public class Groups extends JPanel {
                         String description = descriptionField.getText();
                         ProductGroup newGroup = new ProductGroup(name, description, true);
                         groupListModel.addElement(newGroup);
-                        Items.updateGroupComboBox();
+                      //  Items.updateGroupComboBox();
                         Window win = SwingUtilities.getWindowAncestor(saveButton);
                         if (win != null) {
                             win.dispose();
@@ -145,7 +145,7 @@ public class Groups extends JPanel {
                     ProductGroup.groups.remove(selectedGroup);
                     ProductGroup.deleteGroup(selectedGroup);
                   //  new ProductGroup("", "", true).writeGroupsToFile();
-                    Items.updateGroupComboBox();
+                   // Items.updateGroupComboBox();
                 }
             }
         });
@@ -199,7 +199,7 @@ public class Groups extends JPanel {
                                 groupListModel.set(indexInListModel, newGroup);
                             }
 
-                            Items.updateGroupComboBox();
+                        //    Items.updateGroupComboBox();
                            // notifyObservers(newGroup); // Notify observers
                             Window win = SwingUtilities.getWindowAncestor(saveButton);
                             if (win != null) {

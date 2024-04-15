@@ -7,6 +7,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 
@@ -14,6 +15,7 @@ import structure.Product;
 import uimodels.RoundedButton;
 import uimodels.RoundedComboBox;
 import uimodels.Table;
+import uimodels.RoundedTextField;
 
 
 public class Items extends JPanel {
@@ -21,7 +23,8 @@ public class Items extends JPanel {
     private JPanel productPanel;
     private static JComboBox<String> groupComboBox;
     private ArrayList<ProductGroup> existingGroups;
-private static Table productTable;
+    private static Table productTable;
+
     public Items(ArrayList<ProductGroup> existingGroups) {
         setLayout(new BorderLayout());
         this.existingGroups = existingGroups;
@@ -30,7 +33,7 @@ private static Table productTable;
         titleLabel.setHorizontalAlignment(SwingConstants.CENTER);
         add(titleLabel, BorderLayout.NORTH);
 
-        JPanel  buttonPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 
         RoundedButton searchButton = new RoundedButton("Search");
         RoundedButton addItemButton = new RoundedButton("Add Item");
@@ -39,10 +42,6 @@ private static Table productTable;
         buttonPanel.add(searchButton);
         buttonPanel.add(addItemButton);
         buttonPanel.add(deleteItemButton);
-
-        groupComboBox = new RoundedComboBox();
-        groupComboBox.setPreferredSize(new Dimension(220, 25));
-        buttonPanel.add(groupComboBox); //комбобокс на панелі кнопок пох пон
 
         add(buttonPanel, BorderLayout.SOUTH);
 
@@ -63,55 +62,98 @@ private static Table productTable;
         addItemButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String selectedGroup = (String) groupComboBox.getSelectedItem();
-                if (selectedGroup == null) {
-                    JOptionPane.showMessageDialog(null, "Please select a group first.", "Error", JOptionPane.ERROR_MESSAGE);
-                    return;
+                JPanel panel = new JPanel();
+                panel.setBackground(Color.WHITE);
+                panel.setLayout(new GridLayout(15, 1)); // Increase the grid size to accommodate the new combo box
+                panel.setPreferredSize(new Dimension(300, 580));
+                RoundedTextField nameField = new RoundedTextField(15);
+                RoundedTextField descriptionField = new RoundedTextField(15);
+                RoundedTextField manufacturerField = new RoundedTextField(15);
+                RoundedTextField quantityField = new RoundedTextField(15);
+                RoundedTextField priceField = new RoundedTextField(15);
+
+                // Create a new RoundedComboBox for the list of groups
+                RoundedComboBox groupComboBox = new RoundedComboBox();
+                // Populate the combo box with the list of groups
+                for (ProductGroup group : existingGroups) {
+                    groupComboBox.addItem(group.getName());
                 }
 
-                boolean validInput = false;
-                String name = "";
-                String description = "";
-                String manufacturer = "";
-                int quantity = 0;
-                double price = 0.0;
+                GridBagConstraints gbc = new GridBagConstraints();
 
-                while (!validInput) {
-                    name = JOptionPane.showInputDialog(null, "Enter the name of the product:");
-                    if (name != null) {
-                        description = JOptionPane.showInputDialog(null, "Enter the description of the product:");
-                        if (description != null) {
-                            manufacturer = JOptionPane.showInputDialog(null, "Enter the manufacturer of the product:");
-                            if (manufacturer != null) {
-                                String quantityStr = JOptionPane.showInputDialog(null, "Enter the quantity:");
-                                if (quantityStr != null) {
-                                    try {
-                                        quantity = Integer.parseInt(quantityStr);
-                                        String priceStr = JOptionPane.showInputDialog(null, "Enter the price:");
-                                        if (priceStr != null) {
-                                            try {
-                                                price = Double.parseDouble(priceStr);
-                                                validInput = true;
-                                            } catch (NumberFormatException ex) {
-                                                JOptionPane.showMessageDialog(null, "Invalid price! Please enter a valid price.", "Error", JOptionPane.ERROR_MESSAGE);
-                                            }
-                                        }
-                                    } catch (NumberFormatException ex) {
-                                        JOptionPane.showMessageDialog(null, "Invalid quantity! Please enter a valid quantity.", "Error", JOptionPane.ERROR_MESSAGE);
-                                    }
-                                }
-                            }
+                RoundedButton saveButton = new RoundedButton("Save");
+                saveButton.setPreferredSize(new Dimension(100, 30));
+
+                JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+                buttonPanel.add(saveButton);
+
+                gbc.gridx = 0;
+                gbc.gridy = 0;
+                panel.add(buttonPanel, gbc);
+
+                gbc.gridy = 1;
+                gbc.anchor = GridBagConstraints.CENTER;
+
+                panel.add(new JLabel("   Group:"), gbc);
+                gbc.gridy++;
+                panel.add(groupComboBox, gbc);
+                gbc.gridy++;
+                panel.add(new JLabel("   Name:"), gbc);
+                gbc.gridy++;
+                panel.add(nameField, gbc);
+                gbc.gridy++;
+                panel.add(new JLabel("   Description:"), gbc);
+                gbc.gridy++;
+                panel.add(descriptionField, gbc);
+                gbc.gridy++;
+                panel.add(new JLabel("   Manufacturer:"), gbc);
+                gbc.gridy++;
+                panel.add(manufacturerField, gbc);
+                gbc.gridy++;
+                panel.add(new JLabel("   Quantity:"), gbc);
+                gbc.gridy++;
+                panel.add(quantityField, gbc);
+                gbc.gridy++;
+                panel.add(new JLabel("   Price:"), gbc);
+                gbc.gridy++;
+                panel.add(priceField, gbc);
+                gbc.gridy++;
+                panel.add(new JLabel(" "), gbc);
+
+                saveButton.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        String selectedGroup = (String) groupComboBox.getSelectedItem();
+                        String name = nameField.getText();
+                        String description = descriptionField.getText();
+                        String manufacturer = manufacturerField.getText();
+                        int quantity = Integer.parseInt(quantityField.getText());
+                        double price = Double.parseDouble(priceField.getText());
+
+                        ProductGroup group = ProductGroup.findGroupByName(selectedGroup);
+                        // Create a new product and add it to the products list
+                        Product newProduct = new Product(name, description, manufacturer, quantity, price, group);
+                        Product.getProducts().add(newProduct);
+                        DefaultTableModel model = (DefaultTableModel) productTable.getModel();
+                        model.addRow(new Object[]{newProduct.getGroup(), newProduct.getName(), newProduct.getDescription(), newProduct.getManufacturer(), newProduct.getQuantity(), newProduct.getPrice()});
+
+                        // Close the dialog
+                        Window win = SwingUtilities.getWindowAncestor(saveButton);
+                        if (win != null) {
+                            win.dispose();
                         }
                     }
-                }
-                ProductGroup group = ProductGroup.findGroupByName(selectedGroup);
-                // Create a new product and add it to the products list
-                Product newProduct = new Product(name, description, manufacturer, quantity, price, group);
-                newProduct.setGroup(ProductGroup.findGroupByName(selectedGroup));
-                Product.getProducts().add(newProduct);
-                newProduct.setGroup(ProductGroup.findGroupByName(selectedGroup));
-                DefaultTableModel model = (DefaultTableModel) productTable.getModel();
-                model.addRow(new Object[]{newProduct.getGroup(), newProduct.getName(), newProduct.getDescription(), newProduct.getManufacturer(), newProduct.getQuantity(), newProduct.getPrice()});}
+                });
+
+                panel.add(saveButton);
+
+                JDialog dialog = new JDialog();
+                dialog.setModal(true);
+                dialog.getContentPane().add(panel);
+                dialog.pack();
+                dialog.setLocationRelativeTo(null);
+                dialog.setVisible(true);
+            }
         });
         searchButton.addActionListener(new ActionListener() {
             @Override
@@ -154,9 +196,10 @@ private static Table productTable;
     public static void updateGroupComboBox() {
         System.out.println("updateGroupComboBox called"); // Debugging line
         ArrayList<String> groupNames = new ArrayList<>();
-        if(groupComboBox.getItemAt(0) != null) {
+        if (groupComboBox.getItemAt(0) != null) {
 
-        groupComboBox.removeAllItems();}
+            groupComboBox.removeAllItems();
+        }
         for (ProductGroup group : ProductGroup.groups) {
             groupNames.add(group.getName());
         }
@@ -167,6 +210,7 @@ private static Table productTable;
         DefaultTableModel model = (DefaultTableModel) productTable.getModel();
         model.addRow(new Object[]{newProduct.getGroup(), newProduct.getName(), newProduct.getDescription(), newProduct.getManufacturer(), newProduct.getQuantity(), newProduct.getPrice()});
     }
+
     private static Object[][] getProductData() {
         ArrayList<Product> products = Product.getProducts();
         Object[][] data = new Object[products.size()][6];
