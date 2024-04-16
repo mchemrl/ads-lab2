@@ -271,7 +271,7 @@ public class Groups extends JPanel {
         searchGroupButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String search = JOptionPane.showInputDialog("Введіть назву групи для пошуку");
+                String search = JOptionPane.showInputDialog("Enter group name to search:");
                 DefaultListModel<ProductGroup> searchListModel = new DefaultListModel<>();
                 for (ProductGroup group : ProductGroup.groups) {
                     if (group.getName().contains(search)) {

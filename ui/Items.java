@@ -157,14 +157,20 @@ public class Items extends JPanel {
         searchButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String search = JOptionPane.showInputDialog("Enter group name to search");
-                for (ProductGroup group : existingGroups) {
-                    if (group.getName().equals(search)) {
-                        groupComboBox.setSelectedItem(group.getName());
-                        return;
+                String search = JOptionPane.showInputDialog("Enter product name to search");
+                DefaultTableModel model = (DefaultTableModel) productTable.getModel();
+                model.setRowCount(0); // Clear the table
+                HashSet<String> productNames = new HashSet<>();
+
+                for (Product product : Product.products) {
+                    if (product.getName().contains(search) && !productNames.contains(product.getName())) {
+                        productNames.add(product.getName());
+                        model.addRow(new Object[]{product.getGroup(), product.getName(), product.getDescription(), product.getManufacturer(), product.getQuantity(), product.getPrice()});
                     }
                 }
-                JOptionPane.showMessageDialog(null, "Group not found");
+                if (model.getRowCount() == 0) {
+                    JOptionPane.showMessageDialog(null, "Product not found");
+                }
             }
         });
 

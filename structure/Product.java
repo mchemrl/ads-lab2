@@ -19,7 +19,7 @@ public class Product {
     String manufacturer;
     int quantity;
     double price;
-   static ArrayList<Product> products = new ArrayList<>();
+  public static ArrayList<Product> products = new ArrayList<>();
 
     // constructor for product
     public Product(String name, String description, String manufacturer, int quantity, double price, ProductGroup group) {
@@ -53,6 +53,8 @@ public class Product {
 
     public static void loadItemsFromFile() {
         BufferedReader reader = null;
+        HashSet<String> productNames = new HashSet<>();
+
         try {
             reader = new BufferedReader(new FileReader("items.txt"));
             String line;
@@ -65,10 +67,11 @@ public class Product {
                     String manufacturer = parts[3];
                     int quantity = Integer.parseInt(parts[4]);
                     double price = Double.parseDouble(parts[5]);
-                    Product newProduct = new Product(name, description, manufacturer, quantity, price, group);
-                //    newProduct.setGroup(group);
-                    Product.getProducts().add(newProduct);
-                    Items.updateProductTableWithProduct(newProduct);
+                    if (!productNames.contains(name)) {
+                        productNames.add(name);
+                        Product newProduct = new Product(name, description, manufacturer, quantity, price, group);
+                        Items.updateProductTableWithProduct(newProduct);
+                    }
                 }
             }
         } catch (IOException e) {
@@ -81,16 +84,6 @@ public class Product {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        }
-    }
-
-    public void addProduct(Product product) {
-        this.products.add(product);
-    }
-
-    public void editProduct(int index, Product product) {
-        if (index >= 0 && index < this.products.size()) {
-            this.products.set(index, product);
         }
     }
 
