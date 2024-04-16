@@ -103,4 +103,8 @@ public class GroupList extends JPanel {
     public JList getGroupList() {
         return groupList;
     }
+
+    public void setModel(DefaultListModel<ProductGroup> searchListModel) {
+        groupList.setModel(searchListModel);
+    }
 }

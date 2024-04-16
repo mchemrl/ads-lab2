@@ -43,7 +43,7 @@ public class Groups extends JPanel {
 
         groupDescription = new DescriptionField();
 
-        groupDescription.setFont(new Font("Century Gothic", Font.PLAIN, 13));
+        groupDescription.setFont(new Font("Century Gothic", Font.PLAIN, 15));
         groupDescription.setText("                                                                                                                                                                                                                                                                                                                                                                                                                                                                     ");
 
         JPanel leftPanel = new JPanel();
@@ -73,16 +73,16 @@ public class Groups extends JPanel {
                     infoPanel.add(blank, BorderLayout.NORTH); // Add blank to the NORTH (top of the panel
                     infoPanel.add(infoLabel, BorderLayout.NORTH); // Add infoLabel to the CENTER
 
-                //    if(selectedGroup.getProductByIndex(0)!=null){
-                        String[] columnNames = {"Name", "Description", "Manufacturer", "Quantity", "Price"};
-                        Object[][] data = getProductData(selectedGroup);
+                    //    if(selectedGroup.getProductByIndex(0)!=null){
+                    String[] columnNames = {"Name", "Description", "Manufacturer", "Quantity", "Price"};
+                    Object[][] data = getProductData(selectedGroup);
 
-                        DefaultTableModel model = new DefaultTableModel(data, columnNames);
-                        Table itemslist = new Table(model);
-                        itemslist.setFillsViewportHeight(true);
-                        JScrollPane scrollPane = new JScrollPane(itemslist);
-                        infoPanel.add(scrollPane, BorderLayout.CENTER); // Add scrollPane to the CENTER of infoPanel
-                   // }
+                    DefaultTableModel model = new DefaultTableModel(data, columnNames);
+                    Table itemslist = new Table(model);
+                    itemslist.setFillsViewportHeight(true);
+                    JScrollPane scrollPane = new JScrollPane(itemslist);
+                    infoPanel.add(scrollPane, BorderLayout.CENTER); // Add scrollPane to the CENTER of infoPanel
+                    // }
 
                     infoPanel.add(infoLabel, BorderLayout.NORTH); // Add infoLabel to the NORTH
 
@@ -118,8 +118,8 @@ public class Groups extends JPanel {
         buttonPanel.setLayout(layout);
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(10, 10, 10, 10);// Create the buttons
-        RoundedButton addGroupButton = new RoundedButton("Add Group");
-        addGroupButton.setFont(new Font("Century Gothic", Font.PLAIN, 12));
+        RoundedButton addGroupButton = new RoundedButton("Add");
+        addGroupButton.setFont(new Font("Century Gothic", Font.PLAIN, 15));
         layout.setConstraints(addGroupButton, gbc);
         addGroupButton.addActionListener(new ActionListener() {
             @Override
@@ -157,7 +157,7 @@ public class Groups extends JPanel {
                         String description = descriptionField.getText();
                         ProductGroup newGroup = new ProductGroup(name, description, true);
                         groupListModel.addElement(newGroup);
-                      //  Items.updateGroupComboBox();
+                        //  Items.updateGroupComboBox();
                         Window win = SwingUtilities.getWindowAncestor(saveButton);
                         if (win != null) {
                             win.dispose();
@@ -174,8 +174,8 @@ public class Groups extends JPanel {
                 dialog.setLocationRelativeTo(null);
                 dialog.setVisible(true);
             }});
-        RoundedButton deleteGroupButton = new RoundedButton("Delete Group");
-        deleteGroupButton.setFont(new Font("Century Gothic", Font.PLAIN, 12));
+        RoundedButton deleteGroupButton = new RoundedButton("Delete");
+        deleteGroupButton.setFont(new Font("Century Gothic", Font.PLAIN, 15));
         layout.setConstraints(deleteGroupButton, gbc);
         deleteGroupButton.addActionListener(new ActionListener() {
             @Override
@@ -195,8 +195,8 @@ public class Groups extends JPanel {
                 }
 
             }});
-        RoundedButton editGroupButton = new RoundedButton("Edit Group");
-        editGroupButton.setFont(new Font("Century Gothic", Font.PLAIN, 12));
+        RoundedButton editGroupButton = new RoundedButton("Edit");
+        editGroupButton.setFont(new Font("Century Gothic", Font.PLAIN, 15));
         layout.setConstraints(editGroupButton, gbc);
         editGroupButton.addActionListener(new ActionListener() {
             @Override
@@ -229,44 +229,44 @@ public class Groups extends JPanel {
 
 
                 saveButton.addActionListener(new ActionListener() {
-                        @Override
-                        public void actionPerformed(ActionEvent e) {
-                            String name = nameField.getText();
-                            String description = descriptionField.getText();
-                            ProductGroup newGroup = new ProductGroup(name, description, true);
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        String name = nameField.getText();
+                        String description = descriptionField.getText();
+                        ProductGroup newGroup = new ProductGroup(name, description, true);
 
-                            int indexInArrayList = ProductGroup.groups.indexOf(selectedGroup);
-                            int indexInListModel = groupListModel.indexOf(selectedGroup);
+                        int indexInArrayList = ProductGroup.groups.indexOf(selectedGroup);
+                        int indexInListModel = groupListModel.indexOf(selectedGroup);
 
-                            if (indexInArrayList != -1) {
-                                ProductGroup.groups.remove(selectedGroup);
-                            }
-                            if (indexInListModel != -1) {
-                                groupListModel.set(indexInListModel, newGroup);
-                            }
+                        if (indexInArrayList != -1) {
+                            ProductGroup.groups.remove(selectedGroup);
+                        }
+                        if (indexInListModel != -1) {
+                            groupListModel.set(indexInListModel, newGroup);
+                        }
 
                         //    Items.updateGroupComboBox();
-                           // notifyObservers(newGroup); // Notify observers
-                            Window win = SwingUtilities.getWindowAncestor(saveButton);
-                            if (win != null) {
-                                win.dispose();
-                            }
+                        // notifyObservers(newGroup); // Notify observers
+                        Window win = SwingUtilities.getWindowAncestor(saveButton);
+                        if (win != null) {
+                            win.dispose();
                         }
-                    });
+                    }
+                });
 
                 panel.add(saveButton);
 
 
                 JDialog dialog = new JDialog();
-                    dialog.setModal(true);
-                    dialog.getContentPane().add(panel);
-                    dialog.pack();
-                    dialog.setLocationRelativeTo(null);
-                    dialog.setVisible(true);
-                }
-            });
-        RoundedButton searchGroupButton = new RoundedButton("Search Group");
-        searchGroupButton.setFont(new Font("Century Gothic", Font.PLAIN, 12));
+                dialog.setModal(true);
+                dialog.getContentPane().add(panel);
+                dialog.pack();
+                dialog.setLocationRelativeTo(null);
+                dialog.setVisible(true);
+            }
+        });
+        RoundedButton searchGroupButton = new RoundedButton("Search it");
+        searchGroupButton.setFont(new Font("Century Gothic", Font.PLAIN, 15));
         layout.setConstraints(searchGroupButton, gbc);
         searchGroupButton.addActionListener(new ActionListener() {
             @Override
@@ -274,6 +274,9 @@ public class Groups extends JPanel {
                 String search = JOptionPane.showInputDialog("Enter group name to search");
                 for (ProductGroup group : ProductGroup.groups) {
                     if (group.getName().equals(search)) {
+                        DefaultListModel<ProductGroup> searchListModel = new DefaultListModel<>();
+                        searchListModel.addElement(group);
+                        groupList.setModel(searchListModel);
                         groupList.getGroupList().setSelectedValue(group, true);
                         return;
                     }
@@ -282,27 +285,40 @@ public class Groups extends JPanel {
             }
         });
 
-        gbc.gridx = 1; // set gridx
-        gbc.gridy = 1; // set gridy
-        gbc.gridwidth = 2; // set gridwidth
-        gbc.gridheight = 5; // set gridheight
+        RoundedButton viewAllGroupsButton = new RoundedButton("View all");
+        viewAllGroupsButton.setFont(new Font("Century Gothic", Font.PLAIN, 15));
+        layout.setConstraints(viewAllGroupsButton, gbc);
+        viewAllGroupsButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                groupList.setModel(groupListModel);
+            }
+        });
+
+        gbc.gridx = 0; // set gridx
+        gbc.gridy = GridBagConstraints.RELATIVE; // set gridy to the next available row
+        gbc.gridwidth = 1; // set gridwidth
+        gbc.gridheight = 1; // set gridheight
+        gbc.weightx = 1.0; // request any extra horizontal space
+        gbc.weighty = 1.0; // request any extra vertical space
         gbc.fill = GridBagConstraints.HORIZONTAL; // set fill
+        gbc.insets = new Insets(10, 10, 10, 10); // set padding
 
         buttonPanel.add(addGroupButton);
         buttonPanel.add(deleteGroupButton);
         buttonPanel.add(editGroupButton);
         buttonPanel.add(searchGroupButton);
+        buttonPanel.add(viewAllGroupsButton);
         gbc.gridx = 1; // set gridx
         gbc.gridy = 5; // set gridy
-        gbc.gridwidth = 2; // set gridwidth
-        gbc.gridheight = 2; // set gridheight
+        gbc.gridwidth = 3; // set gridwidth to 3
+        gbc.gridheight = 3; // set gridheight to 3
         gbc.weightx = 1; // request any extra horizontal space
         gbc.weighty = 1; // request any extra vertical space
         gbc.fill = GridBagConstraints.BOTH;
-         buttonPanel.add(groupDescription, gbc);
-         buttonPanel.setBackground(Color.getHSBColor(2.0f/100, 0.0f/100, 98.0f/100));
+        buttonPanel.add(groupDescription, gbc);
+        buttonPanel.setBackground(Color.getHSBColor(2.0f/100, 0.0f/100, 98.0f/100));
         add(buttonPanel, BorderLayout.SOUTH);
-
 
 
     }
