@@ -1,18 +1,22 @@
 package ui;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+import java.util.HashSet;
 
+import structure.Product;
 import structure.ProductGroup;
 import uimodels.DescriptionField;
 import uimodels.GroupList;
 import uimodels.RoundedButton;
 import uimodels.RoundedTextField;
+import uimodels.Table;
 
 public class Groups extends JPanel {
     private JPanel rightPanel;
@@ -56,6 +60,8 @@ public class Groups extends JPanel {
             public void mouseClicked(MouseEvent e) {
                 ProductGroup selectedGroup = groupList.getSelectedValue();
                 if (selectedGroup != null) {
+                    rightPanel.removeAll(); // Clear the rightPanel
+
                     JLabel blank = new JLabel();
                     blank.setText("  ");
                     infoLabel.setText("   Group " + selectedGroup.getName());
@@ -66,6 +72,20 @@ public class Groups extends JPanel {
                     infoPanel.setBackground(Color.getHSBColor(2.0f/100, 1.0f/100, 98.0f/100));
                     infoPanel.add(blank, BorderLayout.NORTH); // Add blank to the NORTH (top of the panel
                     infoPanel.add(infoLabel, BorderLayout.NORTH); // Add infoLabel to the CENTER
+
+                    String[] columnNames = {"Name", "Description", "Manufacturer", "Quantity", "Price"};
+                    Object[][] data = getProductData(selectedGroup);
+
+                    DefaultTableModel model = new DefaultTableModel(data, columnNames);
+                    Table itemslist = new Table(model);
+                    itemslist.setFillsViewportHeight(true);
+                    JScrollPane scrollPane = new JScrollPane(itemslist);
+                    add(scrollPane, BorderLayout.CENTER);
+
+                    infoPanel.add(infoLabel, BorderLayout.NORTH); // Add infoLabel to the NORTH
+                    infoPanel.add(scrollPane);
+                    infoPanel.add(infoLabel, BorderLayout.NORTH); // Add infoLabel to the NORTH
+
                     rightPanel.add(infoPanel, BorderLayout.CENTER); // Add infoPanel to rightPanel
                     groupDescription.revalidate(); // Revalidate the JTextArea
                     groupDescription.repaint(); // Repaint the JTextArea
@@ -75,6 +95,9 @@ public class Groups extends JPanel {
                     infoLabel.setText("");
                     groupDescription.setText("");
                 }
+
+                rightPanel.revalidate(); // Revalidate the rightPanel
+                rightPanel.repaint();
             }
         });
 
@@ -276,5 +299,29 @@ public class Groups extends JPanel {
 
 
     }
+    private static Object[][] getProductData(ProductGroup selectedGroup) {
+        ArrayList<Product> products = Product.getProducts();
+        ArrayList<Product> selectedGroupProducts = new ArrayList<>(); // To store products from the selected group
+        HashSet<String> productNames = new HashSet<>(); // To store unique product names
 
+        for (Product product : products) {
+            if (product.getGroup().equals(selectedGroup) && !productNames.contains(product.getName())) {
+                productNames.add(product.getName());
+                selectedGroupProducts.add(product);
+            }
+        }
+
+        Object[][] data = new Object[selectedGroupProducts.size()][5];
+
+        for (int i = 0; i < selectedGroupProducts.size(); i++) {
+            Product product = selectedGroupProducts.get(i);
+            data[i][0] = product.getName();
+            data[i][1] = product.getDescription();
+            data[i][2] = product.getManufacturer();
+            data[i][3] = product.getQuantity();
+            data[i][4] = product.getPrice();
+        }
+
+        return data;
+    }
 }
