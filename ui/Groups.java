@@ -73,16 +73,16 @@ public class Groups extends JPanel {
                     infoPanel.add(blank, BorderLayout.NORTH); // Add blank to the NORTH (top of the panel
                     infoPanel.add(infoLabel, BorderLayout.NORTH); // Add infoLabel to the CENTER
 
-                    if(selectedGroup.getProductByIndex(0)!=null){
-                    String[] columnNames = {"Name", "Description", "Manufacturer", "Quantity", "Price"};
-                    Object[][] data = getProductData(selectedGroup);
+                //    if(selectedGroup.getProductByIndex(0)!=null){
+                        String[] columnNames = {"Name", "Description", "Manufacturer", "Quantity", "Price"};
+                        Object[][] data = getProductData(selectedGroup);
 
-                    DefaultTableModel model = new DefaultTableModel(data, columnNames);
-                    Table itemslist = new Table(model);
-                    itemslist.setFillsViewportHeight(true);
-                    JScrollPane scrollPane = new JScrollPane(itemslist);
-                    add(scrollPane, BorderLayout.CENTER);
-                        infoPanel.add(scrollPane);     }
+                        DefaultTableModel model = new DefaultTableModel(data, columnNames);
+                        Table itemslist = new Table(model);
+                        itemslist.setFillsViewportHeight(true);
+                        JScrollPane scrollPane = new JScrollPane(itemslist);
+                        infoPanel.add(scrollPane, BorderLayout.CENTER); // Add scrollPane to the CENTER of infoPanel
+                   // }
 
                     infoPanel.add(infoLabel, BorderLayout.NORTH); // Add infoLabel to the NORTH
 
@@ -312,7 +312,7 @@ public class Groups extends JPanel {
         HashSet<String> productNames = new HashSet<>(); // To store unique product names
 
         for (Product product : products) {
-            if (product.getGroup().equals(selectedGroup) && !productNames.contains(product.getName())) {
+            if (product.getGroup() != null && product.getGroup().equals(selectedGroup) && !productNames.contains(product.getName())) {
                 productNames.add(product.getName());
                 selectedGroupProducts.add(product);
             }

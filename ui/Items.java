@@ -7,9 +7,8 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.JTableHeader;
+import java.util.HashSet;
 
 import structure.Product;
 import uimodels.RoundedButton;
@@ -172,22 +171,66 @@ public class Items extends JPanel {
         deleteItemButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String selectedGroup = (String) groupComboBox.getSelectedItem();
-                if (selectedGroup != null) {
-                    int confirm = JOptionPane.showConfirmDialog(null, "Are you sure you want to delete group \"" + selectedGroup + "\"?", "Confirm Delete", JOptionPane.YES_NO_OPTION);
-                    if (confirm == JOptionPane.YES_OPTION) {
-                        // delete group logic
-                        for (ProductGroup group : existingGroups) {
-                            if (group.getName().equals(selectedGroup)) {
-                                ProductGroup.deleteGroup(group);
-                                break;
-                            }
-                        }
-                        JOptionPane.showMessageDialog(null, "Group \"" + selectedGroup + "\" deleted successfully.");
+                // Create a new dialog
+                JDialog dialog = new JDialog();
+                dialog.setModal(true);
+
+                // Create a new panel for the dialog
+                JPanel panel = new JPanel();
+                panel.setLayout(new GridLayout(0, 1));
+
+                // Create a new combo box for the items
+                JComboBox<Product> itemComboBox = new JComboBox<>();
+                HashSet<String> productNames = new HashSet<>();
+                for (Product product : Product.getProducts()) {
+                    if (!productNames.contains(product.getName())) {
+                        productNames.add(product.getName());
+                        itemComboBox.addItem(product);
                     }
-                } else {
-                    JOptionPane.showMessageDialog(null, "No group selected.", "Error", JOptionPane.ERROR_MESSAGE);
                 }
+                panel.add(itemComboBox);
+
+                // Create a new delete button
+                RoundedButton deleteButton = new RoundedButton("Delete");
+                deleteButton.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        Product selectedItem = (Product) itemComboBox.getSelectedItem();                        if (selectedItem != null) {
+                            int confirm = JOptionPane.showConfirmDialog(null, "Are you sure you want to delete item \"" + selectedItem + "\"?", "Confirm Delete", JOptionPane.YES_NO_OPTION);
+                            if (confirm == JOptionPane.YES_OPTION) {
+
+                                //delete  item twice idk why but it works !
+                                Product.deleteProduct(selectedItem);
+                                Product.deleteProduct(selectedItem);
+                                Product.writeItemsToFile();
+
+                                // delete item logic
+                                for (ProductGroup group : existingGroups) {
+                                    for (Product product : group.getProducts()) {
+                                        if (product.getName().equals(selectedItem)) {
+                                            group.getProducts().remove(product);
+                                            Product.getProducts().remove(product); // Remove the product from the static products list
+                                            break;
+                                        }
+                                    }
+                                }
+                                JOptionPane.showMessageDialog(null, "Item \"" + selectedItem + "\" deleted successfully.");
+                               updateProductTable(); // Update the product table
+                          //      updateGroupTabAfterDelete(); // Update the group tab
+                            }
+                        } else {
+                            JOptionPane.showMessageDialog(null, "No item selected.", "Error", JOptionPane.ERROR_MESSAGE);
+                        }
+                        dialog.dispose(); // Close the dialog
+                    }
+                });
+                panel.add(deleteButton);
+
+                // Add the panel to the dialog and display the dialog
+                dialog.getContentPane().add(panel);
+                dialog.pack();
+                dialog.setLocationRelativeTo(null);
+                dialog.setVisible(true);
             }
         });
     }
@@ -206,7 +249,7 @@ public class Items extends JPanel {
         groupComboBox.setModel(new DefaultComboBoxModel<>(groupNames.toArray(new String[0])));
     }
 
-    public static void updateProductTable(Product newProduct) {
+    public static void updateProductTableWithProduct(Product newProduct) {
         DefaultTableModel model = (DefaultTableModel) productTable.getModel();
         model.addRow(new Object[]{newProduct.getGroup(), newProduct.getName(), newProduct.getDescription(), newProduct.getManufacturer(), newProduct.getQuantity(), newProduct.getPrice()});
     }
@@ -226,7 +269,7 @@ public class Items extends JPanel {
         }
         return data;
     }
-
+    // after deleting a group!!!!
     public static void updateProductTableAfterDelete() {
         DefaultTableModel model = (DefaultTableModel) productTable.getModel();
         model.setRowCount(0);
@@ -235,6 +278,20 @@ public class Items extends JPanel {
             model.addRow(row);
         }
     }
+    //update after deleting product
+    private static void updateProductTable(){
+        DefaultTableModel model = (DefaultTableModel) productTable.getModel();
 
+        model.setRowCount(0);
 
+        ArrayList<Product> products = Product.getProducts();
+        HashSet<String> productNames = new HashSet<>();
+
+        for (Product product : products) {
+            if (!productNames.contains(product.getName())) {
+                productNames.add(product.getName());
+                model.addRow(new Object[]{product.getGroup(), product.getName(), product.getDescription(), product.getManufacturer(), product.getQuantity(), product.getPrice()});
+            }
+        }
+    }
 }

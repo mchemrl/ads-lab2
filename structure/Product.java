@@ -68,7 +68,7 @@ public class Product {
                     Product newProduct = new Product(name, description, manufacturer, quantity, price, group);
                 //    newProduct.setGroup(group);
                     Product.getProducts().add(newProduct);
-                    Items.updateProductTable(newProduct);
+                    Items.updateProductTableWithProduct(newProduct);
                 }
             }
         } catch (IOException e) {
@@ -94,10 +94,8 @@ public class Product {
         }
     }
 
-    public void deleteProduct(int index) {
-        if (index >= 0 && index < this.products.size()) {
-            this.products.remove(index);
-        }
+    public static void deleteProduct(Product product) {
+        Product.products.remove(product);
     }
 
     //get product data
@@ -155,12 +153,6 @@ public class Product {
 
     @Override
     public String toString() {
-        return "structure.Product{" +
-                "name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                ", manufacturer='" + manufacturer + '\'' +
-                ", quantity=" + quantity +
-                ", price=" + price +
-                '}';
+        return this.name;
     }
 }
