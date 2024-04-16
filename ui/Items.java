@@ -37,10 +37,12 @@ public class Items extends JPanel {
         RoundedButton searchButton = new RoundedButton("Search");
         RoundedButton addItemButton = new RoundedButton("Add Item");
         RoundedButton deleteItemButton = new RoundedButton("Delete Item");
+        RoundedButton viewButton = new RoundedButton("View all");
 
         buttonPanel.add(searchButton);
         buttonPanel.add(addItemButton);
         buttonPanel.add(deleteItemButton);
+        buttonPanel.add(viewButton);
 
         add(buttonPanel, BorderLayout.SOUTH);
 
@@ -57,6 +59,22 @@ public class Items extends JPanel {
         productPanel.setLayout(new BoxLayout(productPanel, BoxLayout.Y_AXIS));
         JScrollPane productScrollPane = new JScrollPane(productPanel);
         add(productScrollPane, BorderLayout.EAST);
+
+        viewButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                DefaultTableModel model = (DefaultTableModel) productTable.getModel();
+                model.setRowCount(0); // Clear the table
+                HashSet<String> productNames = new HashSet<>();
+
+                for (Product product : Product.products) {
+                    if (!productNames.contains(product.getName())) {
+                        productNames.add(product.getName());
+                        model.addRow(new Object[]{product.getGroup(), product.getName(), product.getDescription(), product.getManufacturer(), product.getQuantity(), product.getPrice()});
+                    }
+                }
+            }
+        });
 
         addItemButton.addActionListener(new ActionListener() {
             @Override
