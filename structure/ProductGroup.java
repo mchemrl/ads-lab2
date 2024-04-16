@@ -86,6 +86,13 @@ public class ProductGroup {
         return name;
     }
 
+    public String setName(String name) {
+        return this.name = name;
+    }
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     public String getDescription() {
         return description;
     }
@@ -98,6 +105,10 @@ public class ProductGroup {
     }
     public void addProduct(Product newProduct){
         products.add(newProduct);
+
+    }
+    public void addAllProductsFromGroup(ProductGroup group){
+        products.addAll(group.getProducts());
 
     }
     public void deleteProduct(Product newProduct){

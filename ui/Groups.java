@@ -201,6 +201,7 @@ public class Groups extends JPanel {
         editGroupButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                selectedGroup = groupList.getSelectedValue();
                 RoundedTextField nameField = new RoundedTextField(15);
                 RoundedTextField descriptionField = new RoundedTextField(15);
 
@@ -227,26 +228,15 @@ public class Groups extends JPanel {
                 buttonPanel.add(saveButton);
                 panel.add(buttonPanel);
 
-
                 saveButton.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
                         String name = nameField.getText();
                         String description = descriptionField.getText();
-                        ProductGroup newGroup = new ProductGroup(name, description, true);
 
-                        int indexInArrayList = ProductGroup.groups.indexOf(selectedGroup);
-                        int indexInListModel = groupListModel.indexOf(selectedGroup);
+                        selectedGroup.setName(name);
+                        selectedGroup.setDescription(description);
 
-                        if (indexInArrayList != -1) {
-                            ProductGroup.groups.remove(selectedGroup);
-                        }
-                        if (indexInListModel != -1) {
-                            groupListModel.set(indexInListModel, newGroup);
-                        }
-
-                        //    Items.updateGroupComboBox();
-                        // notifyObservers(newGroup); // Notify observers
                         Window win = SwingUtilities.getWindowAncestor(saveButton);
                         if (win != null) {
                             win.dispose();
@@ -256,7 +246,6 @@ public class Groups extends JPanel {
 
                 panel.add(saveButton);
 
-
                 JDialog dialog = new JDialog();
                 dialog.setModal(true);
                 dialog.getContentPane().add(panel);
@@ -265,6 +254,7 @@ public class Groups extends JPanel {
                 dialog.setVisible(true);
             }
         });
+
         RoundedButton searchGroupButton = new RoundedButton("Search it");
         searchGroupButton.setFont(new Font("Century Gothic", Font.PLAIN, 15));
         layout.setConstraints(searchGroupButton, gbc);

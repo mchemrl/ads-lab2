@@ -425,7 +425,7 @@ public class Items extends JPanel {
         }
     }
     //update after deleting product
-    private static void updateProductTable(){
+    static void updateProductTable(){
         DefaultTableModel model = (DefaultTableModel) productTable.getModel();
 
         model.setRowCount(0);
