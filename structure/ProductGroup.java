@@ -120,7 +120,9 @@ public class ProductGroup {
                 return group;
             }
         }
-        return null;}
+        return null;
+    }
+
     public static void editProduct(Product product, String name, String description, String manufacturer, int quantity, double price) {
         product.setName(name);
         product.setDescription(description);

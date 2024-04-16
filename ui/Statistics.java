@@ -20,6 +20,9 @@ import static ui.Items.existingGroups;
 public class Statistics extends JPanel {
     private static RoundedComboBox groupComboBox;
     private static RoundedComboBox itemComboBox;
+    private ProductGroup selectedGroup;
+    private Product selectedItem;
+
 
     public Statistics() {
         setLayout(new BorderLayout());
@@ -97,8 +100,26 @@ public class Statistics extends JPanel {
         groupComboBox.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                ProductGroup selectedGroup = ProductGroup.findGroupByName((String) groupComboBox.getSelectedItem());
+                selectedGroup = ProductGroup.findGroupByName((String) groupComboBox.getSelectedItem());
                 updateItemComboBox(selectedGroup);
+            }
+        });
+
+        calculateButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                double totalPrice = 0;
+                if (itemComboBox.getSelectedItem().equals("all items")) {
+                    for (Product product : Product.findItemByGroup(ProductGroup.findGroupByName((String) groupComboBox.getSelectedItem()))) {
+                        totalPrice += product.totalPrice(product);
+                    }
+                    totalPriceLabel.setText("$" + totalPrice);
+                    return;
+                } else {
+                    Product selectedProduct = Product.findItemByName((String) itemComboBox.getSelectedItem());
+                    totalPrice = selectedProduct.totalPrice(selectedProduct);
+                }
+                totalPriceLabel.setText("$" + totalPrice);
             }
         });
 
@@ -119,18 +140,19 @@ public class Statistics extends JPanel {
     public static void updateItemComboBox(ProductGroup selectedGroup) {
         ArrayList<String> itemsNames = new ArrayList();
         itemComboBox.removeAllItems();
-        ArrayList<Product> products = new ArrayList<>();
-        for (Product product : Product.products) {
-            if (product.getGroup().equals(selectedGroup)) {
-                products.add(product);
-            }
-        }
-        Iterator var1 = products.iterator();
-        while (var1.hasNext()) {
-            Product product = (Product) var1.next();
-            itemsNames.add(product.getName());
+        itemComboBox.addItem("all items");
+        ArrayList<Product> products = Product.findItemByGroup(selectedGroup);
+        for (Product product : products) {
+           itemComboBox.addItem(product.getName());
         }
 
-        itemComboBox.setModel(new DefaultComboBoxModel((String[])itemsNames.toArray(new String[0])));
+//        Iterator var1 = products.iterator();
+//        while (var1.hasNext()) {
+//            Product product = (Product) var1.next();
+//            itemsNames.add(product.getName());
+//        }
+//
+//        itemComboBox.setModel(new DefaultComboBoxModel((String[])itemsNames.toArray(new String[0])));
+
     }
 }

@@ -87,6 +87,29 @@ public class Product {
         }
     }
 
+    public static Product findItemByName(String name) {
+        for (Product product : products) {
+                if (product.getName().equals(name)) {
+                    return product;
+                }
+        }
+        return null;
+
+    }
+    public static ArrayList<Product> findItemByGroup(ProductGroup selectedGroup) {
+        ArrayList<Product> products = new ArrayList<>();
+        for (Product product : Product.products) {
+            if (product.getGroup().equals(selectedGroup)) {
+                products.add(product);
+            }
+        }
+        return products;
+    }
+
+    public static double totalPrice(Product product) {
+        return (product.getPrice() * product.getQuantity());
+    }
+
     public static void deleteProduct(Product product) {
         Product.products.remove(product);
     }
