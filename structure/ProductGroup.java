@@ -97,7 +97,6 @@ public class ProductGroup {
         return description;
     }
     public static ArrayList<ProductGroup> getExistingGroups() {
-
         return groups;
     }
     public ArrayList <Product> getProducts(){

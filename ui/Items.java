@@ -21,7 +21,7 @@ public class Items extends JPanel {
     private JTextArea productListTextArea;
     private JPanel productPanel;
     private static JComboBox<String> groupComboBox;
-    private ArrayList<ProductGroup> existingGroups;
+    public static ArrayList<ProductGroup> existingGroups;
     private static Table productTable;
 
     public Items(ArrayList<ProductGroup> existingGroups) {
