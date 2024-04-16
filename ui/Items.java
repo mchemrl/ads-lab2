@@ -37,11 +37,13 @@ public class Items extends JPanel {
         RoundedButton searchButton = new RoundedButton("Search");
         RoundedButton addItemButton = new RoundedButton("Add Item");
         RoundedButton deleteItemButton = new RoundedButton("Delete Item");
+        RoundedButton editItemButton = new RoundedButton("Edit Item");
         RoundedButton viewButton = new RoundedButton("View all");
 
         buttonPanel.add(searchButton);
         buttonPanel.add(addItemButton);
         buttonPanel.add(deleteItemButton);
+        buttonPanel.add(editItemButton);
         buttonPanel.add(viewButton);
 
         add(buttonPanel, BorderLayout.SOUTH);
@@ -255,6 +257,13 @@ public class Items extends JPanel {
                 dialog.pack();
                 dialog.setLocationRelativeTo(null);
                 dialog.setVisible(true);
+            }
+        });
+
+        editItemButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
             }
         });
     }
