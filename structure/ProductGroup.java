@@ -111,6 +111,14 @@ public class ProductGroup {
             }
         }
         return null;}
+    public static void editProduct(Product product, String name, String description, String manufacturer, int quantity, double price) {
+        product.setName(name);
+        product.setDescription(description);
+        product.setManufacturer(manufacturer);
+        product.setQuantity(quantity);
+        product.setPrice(price);
+
+    }
 
     @Override
     public String toString() {

@@ -1,10 +1,13 @@
 package ui;
 
+import structure.ProductGroup;
 import uimodels.RoundedButton;
 import uimodels.RoundedComboBox;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class Statistics extends JPanel {
     public Statistics() {
@@ -57,13 +60,19 @@ public class Statistics extends JPanel {
         statisticsPanel.add(selectGroupLabel, gbc);
 
         RoundedComboBox groupComboBox = new RoundedComboBox();
-        groupComboBox.addItem("");
-        groupComboBox.addItem("Group 1");
-        groupComboBox.addItem("Group 2");
-        groupComboBox.addItem("Group 3");
+        for (ProductGroup group : ProductGroup.getExistingGroups()) {
+            groupComboBox.addItem(group);
+        }
         gbc.gridx = 1;
         gbc.anchor = GridBagConstraints.EAST;
         statisticsPanel.add(groupComboBox, gbc);
+        groupComboBox.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                ProductGroup selectedGroup = (ProductGroup) groupComboBox.getSelectedItem();
+                // Додаткові дії при виборі групи (якщо потрібно)
+            }
+        });
 
         JLabel selectItemLabel = new JLabel("Select item:");
         selectItemLabel.setFont(new Font("Century Gothic", Font.PLAIN, 14));
@@ -72,7 +81,8 @@ public class Statistics extends JPanel {
         gbc.anchor = GridBagConstraints.WEST;
         statisticsPanel.add(selectItemLabel, gbc);
 
-       RoundedComboBox itemComboBox = new RoundedComboBox();
+
+        RoundedComboBox itemComboBox = new RoundedComboBox();
         itemComboBox.addItem("");
         itemComboBox.addItem("Item 1");
         itemComboBox.addItem("Item 2");

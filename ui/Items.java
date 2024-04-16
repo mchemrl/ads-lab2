@@ -53,6 +53,7 @@ public class Items extends JPanel {
 
         DefaultTableModel model = new DefaultTableModel(data, columnNames);
         productTable = new Table(model);
+        productTable.setDefaultEditor(Object.class, null);
         productTable.setFillsViewportHeight(true);
         JScrollPane scrollPane = new JScrollPane(productTable);
         add(scrollPane, BorderLayout.CENTER);
@@ -221,7 +222,8 @@ public class Items extends JPanel {
                 deleteButton.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        Product selectedItem = (Product) itemComboBox.getSelectedItem();                        if (selectedItem != null) {
+                        Product selectedItem = (Product) itemComboBox.getSelectedItem();
+                        if (selectedItem != null) {
                             int confirm = JOptionPane.showConfirmDialog(null, "Are you sure you want to delete item \"" + selectedItem + "\"?", "Confirm Delete", JOptionPane.YES_NO_OPTION);
                             if (confirm == JOptionPane.YES_OPTION) {
 
@@ -241,8 +243,8 @@ public class Items extends JPanel {
                                     }
                                 }
                                 JOptionPane.showMessageDialog(null, "Item \"" + selectedItem + "\" deleted successfully.");
-                               updateProductTable(); // Update the product table
-                          //      updateGroupTabAfterDelete(); // Update the group tab
+                                updateProductTable(); // Update the product table
+                                //      updateGroupTabAfterDelete(); // Update the group tab
                             }
                         } else {
                             JOptionPane.showMessageDialog(null, "No item selected.", "Error", JOptionPane.ERROR_MESSAGE);
@@ -259,16 +261,127 @@ public class Items extends JPanel {
                 dialog.setVisible(true);
             }
         });
-
         editItemButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                JComboBox<Product> productComboBox = new JComboBox<>();
+                for (Product product : Product.getProducts()) {
+                    productComboBox.addItem(product);
+                }
 
+                JComboBox<ProductGroup> groupComboBox = new JComboBox<>();
+                for (ProductGroup group : ProductGroup.getExistingGroups()) {
+                    groupComboBox.addItem(group);
+                }
+
+                JPanel panel = new JPanel();
+                panel.setLayout(new GridLayout(0, 2));
+
+                JLabel nameLabel = new JLabel("Select product:");
+                nameLabel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+                panel.add(nameLabel);
+                panel.add(productComboBox);
+
+                JLabel groupLabel = new JLabel("Select group:");
+                groupLabel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+                panel.add(groupLabel);
+                panel.add(groupComboBox);
+
+                RoundedTextField newNameField = new RoundedTextField(15);
+                newNameField.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+                panel.add(new JLabel("Enter new product name:"));
+                panel.add(newNameField);
+
+                RoundedTextField descriptionField = new RoundedTextField(15);
+                descriptionField.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+                panel.add(new JLabel("Enter product description:"));
+                panel.add(descriptionField);
+
+                RoundedTextField manufacturerField = new RoundedTextField(15);
+                manufacturerField.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+                panel.add(new JLabel("Enter manufacturer:"));
+                panel.add(manufacturerField);
+
+                RoundedTextField quantityField = new RoundedTextField(15);
+                quantityField.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+                panel.add(new JLabel("Enter quantity:"));
+                panel.add(quantityField);
+
+                RoundedTextField priceField = new RoundedTextField(15);
+                priceField.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+                panel.add(new JLabel("Enter price:"));
+                panel.add(priceField);
+
+                RoundedButton saveButton = new RoundedButton("Save");
+                saveButton.setPreferredSize(new Dimension(100, 30));
+                JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+                buttonPanel.add(saveButton);
+                panel.add(buttonPanel);
+
+                saveButton.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        Product selectedProduct = (Product) productComboBox.getSelectedItem();
+                        ProductGroup selectedGroup = (ProductGroup) groupComboBox.getSelectedItem();
+                        String newName = newNameField.getText().trim();
+                        String newDescription = descriptionField.getText().trim();
+                        String newManufacturer = manufacturerField.getText().trim();
+                        int newQuantity;
+                        double newPrice;
+
+                        // Перевірка і конвертація значень кількості та ціни
+                        try {
+                            newQuantity = Integer.parseInt(quantityField.getText().trim());
+                        } catch (NumberFormatException ex) {
+                            newQuantity = selectedProduct.getQuantity(); // Збереження попереднього значення
+                        }
+                        try {
+                            newPrice = Double.parseDouble(priceField.getText().trim());
+                        } catch (NumberFormatException ex) {
+                            newPrice = selectedProduct.getPrice(); // Збереження попереднього значення
+                        }
+
+                        // Видалення продукту з попередньої групи
+                        selectedProduct.getGroup().deleteProduct(selectedProduct);
+
+                        // Оновлення властивостей продукту з урахуванням заповнених та попередніх значень
+                        selectedProduct.setName(newName.isEmpty() ? selectedProduct.getName() : newName);
+                        selectedProduct.setGroup(selectedGroup);
+                        selectedProduct.setDescription(newDescription.isEmpty() ? selectedProduct.getDescription() : newDescription);
+                        selectedProduct.setManufacturer(newManufacturer.isEmpty() ? selectedProduct.getManufacturer() : newManufacturer);
+                        selectedProduct.setQuantity(newQuantity);
+                        selectedProduct.setPrice(newPrice);
+
+                        // Додавання продукту до нової групи
+                        selectedGroup.addProduct(selectedProduct);
+
+                        // Оновлення таблиці продуктів
+                        updateProductTable();
+                        Product.writeItemsToFile();
+                        ProductGroup.writeGroupsToFile();
+
+                        // Закриття діалогового вікна
+                        Window win = SwingUtilities.getWindowAncestor(saveButton);
+                        if (win != null) {
+                            win.dispose();
+                        }
+                    }
+                });
+
+
+                // Створення та налаштування діалогового вікна
+                JDialog dialog = new JDialog();
+                dialog.setModal(true);
+                dialog.getContentPane().add(panel);
+                dialog.pack();
+                dialog.setLocationRelativeTo(null);
+                dialog.setVisible(true);
             }
         });
+
     }
 
-    // updates combobox!!
+        // updates combobox!!
     public static void updateGroupComboBox() {
         System.out.println("updateGroupComboBox called"); // Debugging line
         ArrayList<String> groupNames = new ArrayList<>();
