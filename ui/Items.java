@@ -213,15 +213,16 @@ public class Items extends JPanel {
 
     private static Object[][] getProductData() {
         ArrayList<Product> products = Product.getProducts();
-        Object[][] data = new Object[products.size()][6];
+        Object[][] data = new Object[products.size()][7];
         for (int i = 0; i < products.size(); i++) {
             Product product = products.get(i);
-            data[i][0] = product.getGroup();
-            data[i][1] = product.getName();
-            data[i][2] = product.getDescription();
-            data[i][3] = product.getManufacturer();
-            data[i][4] = product.getQuantity();
-            data[i][5] = product.getPrice();
+            data[i][0] = Boolean.FALSE; // Initialize the checkbox as unchecked
+            data[i][1] = product.getGroup();
+            data[i][2] = product.getName();
+            data[i][3] = product.getDescription();
+            data[i][4] = product.getManufacturer();
+            data[i][5] = product.getQuantity();
+            data[i][6] = product.getPrice();
         }
         return data;
     }

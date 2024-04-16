@@ -7,6 +7,7 @@ import java.awt.*;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.JTableHeader;
 
+
 public class Table extends JTable {
 
     public Table(TableModel model) {
@@ -18,15 +19,24 @@ public class Table extends JTable {
         JTableHeader header = getTableHeader();
         header.setDefaultRenderer(new RoundedHeaderRenderer());
 
-
         //center the text in the table, idk how but thank gd it works
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
         centerRenderer.setHorizontalAlignment(JLabel.CENTER);
         for (int i = 0; i < this.getColumnCount(); i++) {
             this.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
         }
-    }
 
+        // Set default renderer for Boolean class
+        this.setDefaultRenderer(Boolean.class, new TableCellRenderer() {
+            JCheckBox checkBox = new JCheckBox();
+
+            @Override
+            public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+                checkBox.setSelected((value != null && ((Boolean) value).booleanValue()));
+                return checkBox;
+            }
+        });
+    }
 
 
     @Override
@@ -47,5 +57,17 @@ public class Table extends JTable {
         Component component = super.prepareRenderer(renderer, row, column);
         component.setBackground(Color.PINK.brighter());
         return component;
+    }
+}
+
+class CheckBoxHeader extends JCheckBox implements TableCellRenderer {
+    CheckBoxHeader() {
+        setHorizontalAlignment(JLabel.CENTER);
+    }
+
+
+    @Override
+    public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+        return this;
     }
 }

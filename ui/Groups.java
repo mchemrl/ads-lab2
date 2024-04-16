@@ -35,6 +35,7 @@ public class Groups extends JPanel {
         rightPanel.setLayout(new BorderLayout());
         infoLabel = new JLabel();
         rightPanel.add(infoLabel, BorderLayout.NORTH);
+        rightPanel.setBackground(Color.getHSBColor(2.0f/100, 0.0f/100, 98.0f/100)  );
 
         groupDescription = new DescriptionField();
 
@@ -45,6 +46,7 @@ public class Groups extends JPanel {
         leftPanel.setPreferredSize(new Dimension(150, 340));
         leftPanel.setLayout(new BorderLayout());
         add(leftPanel, BorderLayout.WEST);
+        rightPanel.setPreferredSize(new Dimension(370, 340));
 
         groupListModel = new DefaultListModel<>();
         groupList = new GroupList(groupListModel);
@@ -54,10 +56,24 @@ public class Groups extends JPanel {
             public void mouseClicked(MouseEvent e) {
                 ProductGroup selectedGroup = groupList.getSelectedValue();
                 if (selectedGroup != null) {
-                    infoLabel.setText("bla bla " + selectedGroup.getName());
+                    JLabel blank = new JLabel();
+                    blank.setText("  ");
+                    infoLabel.setText("   Group " + selectedGroup.getName());
+                    infoLabel.setFont(new Font("Century Gothic", Font.BOLD, 15));
                     groupDescription.setText(selectedGroup.getDescription()); // Update JTextArea with group description
+                    JPanel infoPanel = new JPanel();
+                    infoPanel.setLayout(new BorderLayout());
+                    infoPanel.setBackground(Color.getHSBColor(2.0f/100, 1.0f/100, 98.0f/100));
+                    infoPanel.add(blank, BorderLayout.NORTH); // Add blank to the NORTH (top of the panel
+                    infoPanel.add(infoLabel, BorderLayout.NORTH); // Add infoLabel to the CENTER
+                    rightPanel.add(infoPanel, BorderLayout.CENTER); // Add infoPanel to rightPanel
                     groupDescription.revalidate(); // Revalidate the JTextArea
                     groupDescription.repaint(); // Repaint the JTextArea
+                    add(rightPanel,BorderLayout.EAST);
+                }
+                else{
+                    infoLabel.setText("");
+                    groupDescription.setText("");
                 }
             }
         });
