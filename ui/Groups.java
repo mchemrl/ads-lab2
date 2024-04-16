@@ -73,6 +73,7 @@ public class Groups extends JPanel {
                     infoPanel.add(blank, BorderLayout.NORTH); // Add blank to the NORTH (top of the panel
                     infoPanel.add(infoLabel, BorderLayout.NORTH); // Add infoLabel to the CENTER
 
+                    if(selectedGroup.getProductByIndex(0)!=null){
                     String[] columnNames = {"Name", "Description", "Manufacturer", "Quantity", "Price"};
                     Object[][] data = getProductData(selectedGroup);
 
@@ -81,9 +82,10 @@ public class Groups extends JPanel {
                     itemslist.setFillsViewportHeight(true);
                     JScrollPane scrollPane = new JScrollPane(itemslist);
                     add(scrollPane, BorderLayout.CENTER);
+                        infoPanel.add(scrollPane);     }
 
                     infoPanel.add(infoLabel, BorderLayout.NORTH); // Add infoLabel to the NORTH
-                    infoPanel.add(scrollPane);
+
                     infoPanel.add(infoLabel, BorderLayout.NORTH); // Add infoLabel to the NORTH
 
                     rightPanel.add(infoPanel, BorderLayout.CENTER); // Add infoPanel to rightPanel
@@ -183,11 +185,16 @@ public class Groups extends JPanel {
                     groupListModel.removeElement(selectedGroup);
                     ProductGroup.groups.remove(selectedGroup);
                     ProductGroup.deleteGroup(selectedGroup);
-                  //  new ProductGroup("", "", true).writeGroupsToFile();
-                   // Items.updateGroupComboBox();
+
+                    // Remove all products that belong to the selected group
+                    ArrayList<Product> products = Product.getProducts();
+                    products.removeIf(product -> product.getGroup() != null && product.getGroup().equals(selectedGroup));
+                    Items.updateProductTableAfterDelete();
+                    // new ProductGroup("", "", true).writeGroupsToFile();
+                    // Items.updateGroupComboBox();
                 }
-            }
-        });
+
+            }});
         RoundedButton editGroupButton = new RoundedButton("Edit Group");
         editGroupButton.setFont(new Font("Century Gothic", Font.PLAIN, 12));
         layout.setConstraints(editGroupButton, gbc);
@@ -309,6 +316,11 @@ public class Groups extends JPanel {
                 productNames.add(product.getName());
                 selectedGroupProducts.add(product);
             }
+        }
+
+        // If the selected group doesn't have any items, return null
+        if (selectedGroupProducts.isEmpty()) {
+            return null;
         }
 
         Object[][] data = new Object[selectedGroupProducts.size()][5];

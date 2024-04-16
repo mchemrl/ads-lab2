@@ -227,5 +227,14 @@ public class Items extends JPanel {
         return data;
     }
 
+    public static void updateProductTableAfterDelete() {
+        DefaultTableModel model = (DefaultTableModel) productTable.getModel();
+        model.setRowCount(0);
+        Object[][] data = getProductData();
+        for (Object[] row : data) {
+            model.addRow(row);
+        }
+    }
+
 
 }

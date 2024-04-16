@@ -74,6 +74,14 @@ public class ProductGroup {
         }
     }
 
+    public Product getProductByIndex(int index){
+        if (index >= 0 && index < products.size()) {
+            return products.get(index);
+        } else {
+            return null; // or throw an exception
+        }
+    }
+
     public String getName() {
         return name;
     }
