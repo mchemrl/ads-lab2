@@ -62,6 +62,10 @@ public class Product {
                 String[] parts = line.split(" - ");
                 if (parts.length >= 6) {
                     ProductGroup group = ProductGroup.findGroupByName(parts[0]);
+                    if (group == null) {
+                        // If the group does not exist, skip this product
+                        continue;
+                    }
                     String name = parts[1];
                     String description = parts[2];
                     String manufacturer = parts[3];

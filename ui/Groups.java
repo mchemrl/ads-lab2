@@ -197,6 +197,7 @@ public class Groups extends JPanel {
                     groupListModel.removeElement(selectedGroup);
                     ProductGroup.groups.remove(selectedGroup);
                     ProductGroup.deleteGroup(selectedGroup);
+                    groupDescription.setText("");
 
                     // Remove all products that belong to the selected group
                     ArrayList<Product> products = Product.getProducts();

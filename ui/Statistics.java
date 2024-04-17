@@ -134,13 +134,21 @@ public class Statistics extends JPanel {
                 BigDecimal quantity;
                 BigDecimal totalprice;
                 if (itemComboBox.getSelectedItem().equals("all items")) {
+
+                    HashSet<String> uniqueProductNames = new HashSet<>();
                     for (Product product : Product.findItemByGroup(ProductGroup.findGroupByName((String) groupComboBox.getSelectedItem()))) {
+                        if (uniqueProductNames.contains(product.getName())) {
+                            // If the product name is already in the HashSet, skip this product
+                            continue;
+                        }
+                        uniqueProductNames.add(product.getName());
                         price = new BigDecimal(String.valueOf(product.getPrice()));
                         quantity = new BigDecimal(String.valueOf(product.getQuantity()));
                         totalPrice = totalPrice.add(price.multiply(quantity).setScale(2, BigDecimal.ROUND_HALF_UP));
                     }
                     totalPriceLabel.setText("$" + totalPrice);
                     return;
+
                 } else {
                     Product selectedProduct = Product.findItemByName((String) itemComboBox.getSelectedItem());
                     price = new BigDecimal(String.valueOf(selectedProduct.getPrice()));
@@ -182,14 +190,19 @@ public class Statistics extends JPanel {
 
     public static void updateTotalCostLabel() {
         double totalPrice = 0;
+        HashSet<String> uniqueProductNames = new HashSet<>();
         for (ProductGroup group : existingGroups) {
             for (Product product : Product.findItemByGroup(group)) {
+                if (uniqueProductNames.contains(product.getName())) {
+                    // If the product name is already in the HashSet, skip this product
+                    continue;
+                }
+                uniqueProductNames.add(product.getName());
                 BigDecimal price = new BigDecimal(String.valueOf(product.getPrice()));
                 BigDecimal quantity = new BigDecimal(String.valueOf(product.getQuantity()));
                 totalPrice = totalPrice + price.multiply(quantity).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
             }
         }
         totalPriceLabel2.setText("$" + totalPrice);
-
     }
 }
