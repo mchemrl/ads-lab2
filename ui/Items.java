@@ -8,6 +8,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import javax.swing.table.DefaultTableModel;
+import java.util.Comparator;
 import java.util.HashSet;
 
 import structure.Product;
@@ -58,6 +59,7 @@ public class Items extends JPanel {
         productTable = new Table(model);
         productTable.setDefaultEditor(Object.class, null);
         productTable.setFillsViewportHeight(true);
+        productTable.setAutoCreateRowSorter(true);
         JScrollPane scrollPane = new JScrollPane(productTable);
         add(scrollPane, BorderLayout.CENTER);
 
@@ -191,6 +193,7 @@ public class Items extends JPanel {
                             if (win != null) {
                                 win.dispose();
                             }
+                            Statistics.updateTotalCostLabel();
                         } else {
                             JOptionPane.showMessageDialog(null, "Item name already exists. Please enter a different name.");
                         }
@@ -278,6 +281,7 @@ public class Items extends JPanel {
                                 updateProductTable(); // Update the product table
                                 //      updateGroupTabAfterDelete(); // Update the group tab
                             }
+                            Statistics.updateTotalCostLabel();
                         } else {
                             JOptionPane.showMessageDialog(null, "No item selected.", "Error", JOptionPane.ERROR_MESSAGE);
                         }
@@ -349,6 +353,7 @@ public class Items extends JPanel {
                             if (win != null) {
                                 win.dispose();
                             }
+                            Statistics.updateTotalCostLabel();
                         }
                     }
                 });
@@ -384,6 +389,7 @@ public class Items extends JPanel {
 
                 RoundedTextField newNameField = new RoundedTextField(15);
                 newNameField.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+
                 panel.add(new JLabel("Enter new product name:"));
                 panel.add(newNameField);
 
@@ -424,27 +430,24 @@ public class Items extends JPanel {
                         int newQuantity;
                         double newPrice;
 
-                        // Перевірка і конвертація значень кількості та ціни
                         try {
-                            newQuantity = Integer.parseInt(quantityField.getText());
-                            if (newQuantity < 0) {
-                                throw new NumberFormatException();
+                            newQuantity = Integer.parseInt(quantityField.getText().trim());
+                            if (newQuantity < 1) {
+                                JOptionPane.showMessageDialog(null, "Quantity cannot be negative");
+                                return; // Exit the method
                             }
                         } catch (NumberFormatException ex) {
-                            JOptionPane.showMessageDialog(null, "Quantity cannot be negative. Please enter a different value.");
-                            return; // Exit the method
+                            newQuantity = selectedProduct.getQuantity(); // Збереження попереднього значення
                         }
-
                         try {
-                            newPrice = Double.parseDouble(priceField.getText());
-                            if (newPrice < 0) {
-                                throw new NumberFormatException();
+                            newPrice = Double.parseDouble(priceField.getText().trim());
+                            if (newPrice < 0.1) {
+                                JOptionPane.showMessageDialog(null, "Price cannot be negative");
+                                return; // Exit the method
                             }
                         } catch (NumberFormatException ex) {
-                            JOptionPane.showMessageDialog(null, "Price cannot be negative. Please enter a different value.");
-                            return; // Exit the method
+                            newPrice = selectedProduct.getPrice(); // Збереження попереднього значення
                         }
-
 
                         // Create a HashSet to store item names
                         HashSet<String> itemNames = new HashSet<>();
@@ -541,6 +544,8 @@ public class Items extends JPanel {
 
         ArrayList<Product> products = Product.getProducts();
         HashSet<String> productNames = new HashSet<>();
+
+        products.sort(Comparator.comparing(product -> product.getGroup().getName()));
 
         for (Product product : products) {
             if (!productNames.contains(product.getName())) {

@@ -80,6 +80,7 @@ public class Groups extends JPanel {
                     DefaultTableModel model = new DefaultTableModel(data, columnNames);
                     Table itemslist = new Table(model);
                     itemslist.setFillsViewportHeight(true);
+                    itemslist.setAutoCreateRowSorter(true);
                     JScrollPane scrollPane = new JScrollPane(itemslist);
                     infoPanel.add(scrollPane, BorderLayout.CENTER); // Add scrollPane to the CENTER of infoPanel
                     // }
@@ -265,6 +266,7 @@ public class Groups extends JPanel {
                                 win.dispose();
                             }
                             Statistics.updateGroupComboBox();
+                            Statistics.updateItemComboBox(selectedGroup);
                         } else {
                             JOptionPane.showMessageDialog(null, "Group name already exists. Please enter a different name.");
                         }

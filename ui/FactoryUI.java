@@ -43,5 +43,7 @@ import structure.Product;
         ProductGroup.loadGroupsFromFile();
         Product.loadItemsFromFile();
         tab3.updateGroupComboBox();
+        tab3.updateTotalCostLabel();
+
     }
 }

@@ -25,6 +25,8 @@ public class Statistics extends JPanel {
     private ProductGroup selectedGroup;
     private Product selectedItem;
 
+    private static JLabel totalPriceLabel2;
+
 
     public Statistics() {
         setLayout(new BorderLayout());
@@ -55,7 +57,7 @@ public class Statistics extends JPanel {
         statisticsPanel.add(calculateButton, gbc);
 
 
-        JLabel totalCostLabel = new JLabel("Total cost of goods:");
+        JLabel totalCostLabel = new JLabel("Calculated cost:");
         totalCostLabel.setFont(new Font("Century Gothic", Font.PLAIN, 14));
         gbc.gridx = 0;
         gbc.gridy = 1;
@@ -67,6 +69,22 @@ public class Statistics extends JPanel {
         gbc.gridx = 1;
         gbc.anchor = GridBagConstraints.EAST;
         statisticsPanel.add(totalPriceLabel, gbc);
+
+
+        JLabel totalCostLabel2 = new JLabel("Total cost of all items:");
+        totalCostLabel2.setFont(new Font("Century Gothic", Font.PLAIN, 14));
+        gbc.gridx = 0;
+        gbc.gridy = 4;
+        gbc.anchor = GridBagConstraints.WEST;
+        statisticsPanel.add(totalCostLabel2, gbc);
+        double totalPrice2 = 0;
+        totalPriceLabel2 = new JLabel();
+        totalPriceLabel2.setFont(new Font("Century Gothic", Font.PLAIN, 14));
+        totalPriceLabel2.setText("$" + totalPrice2);
+        gbc.gridx = 1;
+        gbc.anchor = GridBagConstraints.EAST;
+        statisticsPanel.add(totalPriceLabel2, gbc);
+
 
         JLabel selectGroupLabel = new JLabel("Select group:");
         selectGroupLabel.setFont(new Font("Century Gothic", Font.PLAIN, 14));
@@ -130,6 +148,7 @@ public class Statistics extends JPanel {
                     totalPrice  =  price.multiply(quantity).setScale(2, BigDecimal.ROUND_HALF_UP);
                 }
                 totalPriceLabel.setText("$" + totalPrice);
+                updateTotalCostLabel();
             }
         });
 
@@ -159,5 +178,18 @@ public class Statistics extends JPanel {
         for (String itemName : uniqueItemNames) {
             itemComboBox.addItem(itemName);
         }
+    }
+
+    public static void updateTotalCostLabel() {
+        double totalPrice = 0;
+        for (ProductGroup group : existingGroups) {
+            for (Product product : Product.findItemByGroup(group)) {
+                BigDecimal price = new BigDecimal(String.valueOf(product.getPrice()));
+                BigDecimal quantity = new BigDecimal(String.valueOf(product.getQuantity()));
+                totalPrice = totalPrice + price.multiply(quantity).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+            }
+        }
+        totalPriceLabel2.setText("$" + totalPrice);
+
     }
 }
