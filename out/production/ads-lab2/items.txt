@@ -5,3 +5,4 @@ meth - vika drda - huqhwu - ksjdi - 12 - 4.4
 meth - testcheck - 2 - 2 - 2 - 2.0
 x - 1 - 1 - 1 - 1 - 1.0
 meth - d - d - d - 1 - 1.0
+meth - heroin - notsafe - secret - 222 - 300.0
