@@ -94,6 +94,7 @@ public class Statistics extends JPanel {
 
         itemComboBox = new RoundedComboBox();
         itemComboBox.setPreferredSize(new Dimension(200, 30));
+        itemComboBox.addItem("all items");
         gbc.gridx = 1;
         gbc.anchor = GridBagConstraints.EAST;
         statisticsPanel.add(itemComboBox, gbc);
@@ -140,6 +141,7 @@ public class Statistics extends JPanel {
     public static void updateItemComboBox(ProductGroup selectedGroup) {
         ArrayList<String> itemsNames = new ArrayList();
         itemComboBox.removeAllItems();
+        itemComboBox.firePopupMenuWillBecomeInvisible();
         itemComboBox.addItem("all items");
         ArrayList<Product> products = Product.findItemByGroup(selectedGroup);
         for (Product product : products) {

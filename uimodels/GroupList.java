@@ -21,7 +21,7 @@ public class GroupList extends JPanel {
         groupList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         groupList.setFont(new Font("Century Gothic", Font.PLAIN, 13));
        // groupList.setBackground(Color.getHSBColor(2.0f/100, 0.0f/100, 98.0f/100));        groupList.setForeground(Color.WHITE); // Add this line
-//setting background breaks everything??? SF?S FoS'lksLKF:sLK:
+       //setting background breaks everything??? SF?S FoS'lksLKF:sLK:
         groupList.setCellRenderer(new DefaultListCellRenderer() {
             @Override
             public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
