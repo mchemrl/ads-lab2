@@ -190,7 +190,7 @@ public class Groups extends JPanel {
                     // Remove all products that belong to the selected group
                     ArrayList<Product> products = Product.getProducts();
                     products.removeIf(product -> product.getGroup() != null && product.getGroup().equals(selectedGroup));
-                    Items.updateProductTableAfterDelete();
+                    Items.updateProductTable();
                     // new ProductGroup("", "", true).writeGroupsToFile();
                     // Items.updateGroupComboBox();
                     Statistics.updateGroupComboBox();

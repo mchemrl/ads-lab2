@@ -479,16 +479,7 @@ public class Items extends JPanel {
         }
         return data;
     }
-    // after deleting a group!!!!
-    public static void updateProductTableAfterDelete() {
-        DefaultTableModel model = (DefaultTableModel) productTable.getModel();
-        model.setRowCount(0);
-        Object[][] data = getProductData();
-        for (Object[] row : data) {
-            model.addRow(row);
-        }
-    }
-    //update after deleting product
+    //update the table
     static void updateProductTable(){
         DefaultTableModel model = (DefaultTableModel) productTable.getModel();
 
