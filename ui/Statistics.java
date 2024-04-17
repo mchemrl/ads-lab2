@@ -16,6 +16,7 @@ import java.util.Iterator;
 import ui.Items;
 
 import static ui.Items.existingGroups;
+import java.util.HashSet;
 
 public class Statistics extends JPanel {
     private static RoundedComboBox groupComboBox;
@@ -139,22 +140,16 @@ public class Statistics extends JPanel {
         groupComboBox.setModel(new DefaultComboBoxModel((String[])groupNames.toArray(new String[0])));
     }
     public static void updateItemComboBox(ProductGroup selectedGroup) {
-        ArrayList<String> itemsNames = new ArrayList();
+        HashSet<String> uniqueItemNames = new HashSet<>();
         itemComboBox.removeAllItems();
         itemComboBox.firePopupMenuWillBecomeInvisible();
         itemComboBox.addItem("all items");
         ArrayList<Product> products = Product.findItemByGroup(selectedGroup);
         for (Product product : products) {
-           itemComboBox.addItem(product.getName());
+            uniqueItemNames.add(product.getName());
         }
-
-//        Iterator var1 = products.iterator();
-//        while (var1.hasNext()) {
-//            Product product = (Product) var1.next();
-//            itemsNames.add(product.getName());
-//        }
-//
-//        itemComboBox.setModel(new DefaultComboBoxModel((String[])itemsNames.toArray(new String[0])));
-
+        for (String itemName : uniqueItemNames) {
+            itemComboBox.addItem(itemName);
+        }
     }
 }

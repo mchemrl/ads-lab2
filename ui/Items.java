@@ -333,16 +333,11 @@ public class Items extends JPanel {
         editItemButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                JComboBox<Product> productComboBox = new JComboBox<>();
-                for (Product product : Product.getProducts()) {
-                    productComboBox.addItem(product);
-                }
+                HashSet<Product> uniqueProducts = new HashSet<>(Product.getProducts());
+                JComboBox<Product> productComboBox = new JComboBox<>(uniqueProducts.toArray(new Product[0]));
 
-                JComboBox<ProductGroup> groupComboBox = new JComboBox<>();
-                for (ProductGroup group : ProductGroup.getExistingGroups()) {
-                    groupComboBox.addItem(group);
-                }
-
+                HashSet<ProductGroup> uniqueGroups = new HashSet<>(ProductGroup.getExistingGroups());
+                JComboBox<ProductGroup> groupComboBox = new JComboBox<>(uniqueGroups.toArray(new ProductGroup[0]));
                 JPanel panel = new JPanel();
                 panel.setLayout(new GridLayout(0, 2));
 
