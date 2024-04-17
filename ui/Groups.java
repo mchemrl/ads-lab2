@@ -162,6 +162,7 @@ public class Groups extends JPanel {
                         if (win != null) {
                             win.dispose();
                         }
+                        Statistics.updateGroupComboBox();
                     }
                 });
 
@@ -192,6 +193,7 @@ public class Groups extends JPanel {
                     Items.updateProductTableAfterDelete();
                     // new ProductGroup("", "", true).writeGroupsToFile();
                     // Items.updateGroupComboBox();
+                    Statistics.updateGroupComboBox();
                 }
 
             }});
@@ -244,6 +246,7 @@ public class Groups extends JPanel {
                         if (win != null) {
                             win.dispose();
                         }
+                        Statistics.updateGroupComboBox();
                     }
                 });
 
