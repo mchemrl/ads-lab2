@@ -236,6 +236,9 @@ public class Groups extends JPanel {
 
                         selectedGroup.setName(name);
                         selectedGroup.setDescription(description);
+                        ProductGroup.writeGroupsToFile();
+                        groupListModel.setElementAt(selectedGroup, groupList.getSelectedIndex());
+                        infoLabel.setText("   Group " + selectedGroup.getName());
 
                         Window win = SwingUtilities.getWindowAncestor(saveButton);
                         if (win != null) {
