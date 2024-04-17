@@ -21,7 +21,7 @@ public class Items extends JPanel {
     private JTextArea productListTextArea;
     private JPanel productPanel;
     private static JComboBox<String> groupComboBox;
-    private ArrayList<ProductGroup> existingGroups;
+    public static ArrayList<ProductGroup> existingGroups;
     private static Table productTable;
 
     public Items(ArrayList<ProductGroup> existingGroups) {
@@ -35,16 +35,19 @@ public class Items extends JPanel {
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 
         RoundedButton searchButton = new RoundedButton("Search");
-        RoundedButton addItemButton = new RoundedButton("Add Item");
-        RoundedButton deleteItemButton = new RoundedButton("Delete Item");
-        RoundedButton editItemButton = new RoundedButton("Edit Item");
+        RoundedButton addItemButton = new RoundedButton("Add");
+        RoundedButton deleteItemButton = new RoundedButton("Delete");
+        RoundedButton editItemButton = new RoundedButton("Edit");
         RoundedButton viewButton = new RoundedButton("View all");
+        RoundedButton changeQuantityButton = new RoundedButton("Change quantity");
+
 
         buttonPanel.add(searchButton);
         buttonPanel.add(addItemButton);
         buttonPanel.add(deleteItemButton);
         buttonPanel.add(editItemButton);
         buttonPanel.add(viewButton);
+        buttonPanel.add(changeQuantityButton);
 
         add(buttonPanel, BorderLayout.SOUTH);
 
@@ -255,6 +258,72 @@ public class Items extends JPanel {
                 panel.add(deleteButton);
 
                 // Add the panel to the dialog and display the dialog
+                dialog.getContentPane().add(panel);
+                dialog.pack();
+                dialog.setLocationRelativeTo(null);
+                dialog.setVisible(true);
+            }
+        });
+        changeQuantityButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                RoundedComboBox productComboBox = new RoundedComboBox();
+                for (Product product : Product.getProducts()) {
+                    productComboBox.addItem(product);
+                }
+                JPanel panel = new JPanel();
+                panel.setLayout(new GridLayout(0, 2));
+
+                JLabel nameLabel = new JLabel("Select product:");
+                nameLabel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+                panel.add(nameLabel);
+                panel.add(productComboBox);
+
+                SpinnerNumberModel model = new SpinnerNumberModel(Product.findItemByName(productComboBox.getSelectedItem().toString()).getQuantity(), //initial value
+                        0,  //min
+                        Integer.MAX_VALUE, //max
+                        1); //step
+                JSpinner quantityField = new JSpinner(model);
+                // quantityField.setValue(Product.findItemByName(productComboBox.getSelectedItem().toString()).getQuantity());
+                quantityField.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+                panel.add(new JLabel("Quantity:"));
+                panel.add(quantityField);
+
+//
+//                RoundedTextField quantityField = new RoundedTextField(15);
+//                quantityField.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+//                panel.add(new JLabel("Enter new quantity:"));
+//                panel.add(quantityField);
+
+                RoundedButton saveButton = new RoundedButton("Save");
+                saveButton.setPreferredSize(new Dimension(100, 30));
+                JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+                buttonPanel.add(saveButton);
+                panel.add(buttonPanel);
+
+////                saveButton.addActionListener(new ActionListener() {
+////                    @Override
+////                    public void actionPerformed(ActionEvent e) {
+////                        Product selectedProduct = (Product) productComboBox.getSelectedItem();
+////                        int newQuantity;
+////                        try {
+////                            newQuantity = Integer.parseInt(quantityField.getText().trim());
+////                        } catch (NumberFormatException ex) {
+////                            newQuantity = selectedProduct.getQuantity(); // Збереження попереднього значення
+////                        }
+////                        selectedProduct.setQuantity(newQuantity);
+////                        updateProductTable();
+////                        Product.writeItemsToFile();
+////                        ProductGroup.writeGroupsToFile();
+////                        Window win = SwingUtilities.getWindowAncestor(saveButton);
+////                        if (win != null) {
+////                            win.dispose();
+////                        }
+////                    }
+//                });
+
+                JDialog dialog = new JDialog();
+                dialog.setModal(true);
                 dialog.getContentPane().add(panel);
                 dialog.pack();
                 dialog.setLocationRelativeTo(null);

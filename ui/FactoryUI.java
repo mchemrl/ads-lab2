@@ -7,6 +7,7 @@ import structure.ProductGroup;
 import structure.Product;
 
  public class FactoryUI extends JFrame {
+    public static Statistics tab3;
     public FactoryUI() {
         setSize(540, 720);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -18,7 +19,7 @@ import structure.Product;
         Groups tab1 = new Groups();
         ArrayList<ProductGroup> existingGroups = ProductGroup.getExistingGroups();
         Items tab2 = new Items(existingGroups);
-        Statistics tab3 = new Statistics();
+        tab3 = new Statistics();
 
         tab1.setBackground(Color.getHSBColor(2.0f/100, 4.0f/100, 98.0f/100));
         tab2.setBackground(Color.getHSBColor(2.0f/100, 4.0f/100, 98.0f/100));
@@ -41,5 +42,6 @@ import structure.Product;
         new FactoryUI();
         ProductGroup.loadGroupsFromFile();
         Product.loadItemsFromFile();
+        tab3.updateGroupComboBox();
     }
 }
