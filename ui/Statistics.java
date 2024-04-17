@@ -9,6 +9,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -110,16 +111,23 @@ public class Statistics extends JPanel {
         calculateButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                double totalPrice = 0;
+                BigDecimal totalPrice = BigDecimal.valueOf(0);
+                BigDecimal price;
+                BigDecimal quantity;
+                BigDecimal totalprice;
                 if (itemComboBox.getSelectedItem().equals("all items")) {
                     for (Product product : Product.findItemByGroup(ProductGroup.findGroupByName((String) groupComboBox.getSelectedItem()))) {
-                        totalPrice += product.totalPrice(product);
+                        price = new BigDecimal(String.valueOf(product.getPrice()));
+                        quantity = new BigDecimal(String.valueOf(product.getQuantity()));
+                        totalPrice = totalPrice.add(price.multiply(quantity).setScale(2, BigDecimal.ROUND_HALF_UP));
                     }
                     totalPriceLabel.setText("$" + totalPrice);
                     return;
                 } else {
                     Product selectedProduct = Product.findItemByName((String) itemComboBox.getSelectedItem());
-                    totalPrice = selectedProduct.totalPrice(selectedProduct);
+                    price = new BigDecimal(String.valueOf(selectedProduct.getPrice()));
+                    quantity = new BigDecimal(String.valueOf(selectedProduct.getQuantity()));
+                    totalPrice  =  price.multiply(quantity).setScale(2, BigDecimal.ROUND_HALF_UP);
                 }
                 totalPriceLabel.setText("$" + totalPrice);
             }
