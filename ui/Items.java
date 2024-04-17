@@ -289,21 +289,17 @@ public class Items extends JPanel {
                 panel.add(nameLabel);
                 panel.add(productComboBox);
 
-                SpinnerNumberModel model = new SpinnerNumberModel(Product.findItemByName(productComboBox.getSelectedItem().toString()).getQuantity(), //initial value
-                        0,  //min
-                        Integer.MAX_VALUE, //max
-                        1); //step
-                JSpinner quantityField = new JSpinner(model);
+//                SpinnerNumberModel model = new SpinnerNumberModel(Product.findItemByName(productComboBox.getSelectedItem().toString()).getQuantity(), //initial value
+//                        0,  //min
+//                        Integer.MAX_VALUE, //max
+//                        1); //step
+                JSpinner quantityField = new JSpinner();
+                quantityField.setEditor(new JSpinner.DefaultEditor(quantityField));
+                quantityField.setValue(0);
                 // quantityField.setValue(Product.findItemByName(productComboBox.getSelectedItem().toString()).getQuantity());
                 quantityField.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
                 panel.add(new JLabel("Quantity:"));
                 panel.add(quantityField);
-
-//
-//                RoundedTextField quantityField = new RoundedTextField(15);
-//                quantityField.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-//                panel.add(new JLabel("Enter new quantity:"));
-//                panel.add(quantityField);
 
                 RoundedButton saveButton = new RoundedButton("Save");
                 saveButton.setPreferredSize(new Dimension(100, 30));
@@ -311,26 +307,36 @@ public class Items extends JPanel {
                 buttonPanel.add(saveButton);
                 panel.add(buttonPanel);
 
-////                saveButton.addActionListener(new ActionListener() {
-////                    @Override
-////                    public void actionPerformed(ActionEvent e) {
-////                        Product selectedProduct = (Product) productComboBox.getSelectedItem();
-////                        int newQuantity;
-////                        try {
-////                            newQuantity = Integer.parseInt(quantityField.getText().trim());
-////                        } catch (NumberFormatException ex) {
-////                            newQuantity = selectedProduct.getQuantity(); // Збереження попереднього значення
-////                        }
-////                        selectedProduct.setQuantity(newQuantity);
-////                        updateProductTable();
-////                        Product.writeItemsToFile();
-////                        ProductGroup.writeGroupsToFile();
-////                        Window win = SwingUtilities.getWindowAncestor(saveButton);
-////                        if (win != null) {
-////                            win.dispose();
-////                        }
-////                    }
-//                });
+                saveButton.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        Product selectedProduct = (Product) productComboBox.getSelectedItem();
+                        int newQuantity;
+                        try {
+                            newQuantity = Integer.parseInt(quantityField.getValue().toString());
+                        } catch (NumberFormatException ex) {
+                            newQuantity = 0; // Default to 0 if input is not a valid number
+                        }
+
+                        int currentQuantity = selectedProduct.getQuantity();
+                        int updatedQuantity = currentQuantity + newQuantity;
+
+                        // Check if the updated quantity is negative
+                        if (updatedQuantity < 0) {
+                            JOptionPane.showMessageDialog(null, "Quantity cannot be negative. Please enter a different value.");
+                        } else {
+                            selectedProduct.setQuantity(updatedQuantity);
+                            updateProductTable();
+                            Product.writeItemsToFile();
+                            ProductGroup.writeGroupsToFile();
+
+                            Window win = SwingUtilities.getWindowAncestor(saveButton);
+                            if (win != null) {
+                                win.dispose();
+                            }
+                        }
+                    }
+                });
 
                 JDialog dialog = new JDialog();
                 dialog.setModal(true);
