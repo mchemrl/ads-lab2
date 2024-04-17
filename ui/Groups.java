@@ -153,16 +153,26 @@ public class Groups extends JPanel {
                 saveButton.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        String name = nameField.getText();
+                        String name = nameField.getText().toLowerCase();
                         String description = descriptionField.getText();
-                        ProductGroup newGroup = new ProductGroup(name, description, true);
-                        groupListModel.addElement(newGroup);
-                        //  Items.updateGroupComboBox();
-                        Window win = SwingUtilities.getWindowAncestor(saveButton);
-                        if (win != null) {
-                            win.dispose();
+
+                        // Create a HashSet to store group names
+                        HashSet<String> groupNames = new HashSet<>();
+                        for (ProductGroup group : ProductGroup.groups) {
+                            groupNames.add(group.getName().toLowerCase());
                         }
-                        Statistics.updateGroupComboBox();
+                        // Check if the group name already exists
+                        if (!groupNames.contains(name)) {
+                            ProductGroup newGroup = new ProductGroup(name, description, true);
+                            groupListModel.addElement(newGroup);
+                            Window win = SwingUtilities.getWindowAncestor(saveButton);
+                            if (win != null) {
+                                win.dispose();
+                            }
+                            Statistics.updateGroupComboBox();
+                        } else {
+                            JOptionPane.showMessageDialog(null, "Group name already exists. Please enter a different name.");
+                        }
                     }
                 });
 
@@ -233,20 +243,31 @@ public class Groups extends JPanel {
                 saveButton.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        String name = nameField.getText();
+                        String name = nameField.getText().toLowerCase();
                         String description = descriptionField.getText();
-
-                        selectedGroup.setName(name);
-                        selectedGroup.setDescription(description);
-                        ProductGroup.writeGroupsToFile();
-                        groupListModel.setElementAt(selectedGroup, groupList.getSelectedIndex());
-                        infoLabel.setText("   Group " + selectedGroup.getName());
-
-                        Window win = SwingUtilities.getWindowAncestor(saveButton);
-                        if (win != null) {
-                            win.dispose();
+                        // Create a HashSet to store group names
+                        HashSet<String> groupNames = new HashSet<>();
+                        for (ProductGroup group : ProductGroup.groups) {
+                            if (!group.equals(selectedGroup)) { // Exclude the current group from the check
+                                groupNames.add(group.getName().toLowerCase()); // Convert each group name to lower case
+                            }
                         }
-                        Statistics.updateGroupComboBox();
+                        // Check if the group name already exists (case-insensitive)
+                        if (!groupNames.contains(name)) {
+                            selectedGroup.setName(name);
+                            selectedGroup.setDescription(description);
+                            ProductGroup.writeGroupsToFile();
+                            groupListModel.setElementAt(selectedGroup, groupList.getSelectedIndex());
+                            infoLabel.setText("   Group " + selectedGroup.getName());
+
+                            Window win = SwingUtilities.getWindowAncestor(saveButton);
+                            if (win != null) {
+                                win.dispose();
+                            }
+                            Statistics.updateGroupComboBox();
+                        } else {
+                            JOptionPane.showMessageDialog(null, "Group name already exists. Please enter a different name.");
+                        }
                     }
                 });
 

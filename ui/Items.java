@@ -147,23 +147,33 @@ public class Items extends JPanel {
                     @Override
                     public void actionPerformed(ActionEvent e) {
                         String selectedGroup = (String) groupComboBox.getSelectedItem();
-                        String name = nameField.getText();
+                        String name = nameField.getText().toLowerCase();
                         String description = descriptionField.getText();
                         String manufacturer = manufacturerField.getText();
                         int quantity = Integer.parseInt(quantityField.getText());
                         double price = Double.parseDouble(priceField.getText());
 
-                        ProductGroup group = ProductGroup.findGroupByName(selectedGroup);
-                        // Create a new product and add it to the products list
-                        Product newProduct = new Product(name, description, manufacturer, quantity, price, group);
-                        Product.getProducts().add(newProduct);
-                        DefaultTableModel model = (DefaultTableModel) productTable.getModel();
-                        model.addRow(new Object[]{newProduct.getGroup(), newProduct.getName(), newProduct.getDescription(), newProduct.getManufacturer(), newProduct.getQuantity(), newProduct.getPrice()});
+                        // Create a HashSet to store item names
+                        HashSet<String> itemNames = new HashSet<>();
+                        for (Product item : Product.getProducts()) {
+                            itemNames.add(item.getName().toLowerCase()); // Convert each item name to lower case
+                        }
+                        // Check if the item name already exists (case-insensitive)
+                        if (!itemNames.contains(name)) {
+                            ProductGroup group = ProductGroup.findGroupByName(selectedGroup);
+                            // Create a new product and add it to the products list
+                            Product newProduct = new Product(name, description, manufacturer, quantity, price, group);
+                            Product.getProducts().add(newProduct);
+                            DefaultTableModel model = (DefaultTableModel) productTable.getModel();
+                            model.addRow(new Object[]{newProduct.getGroup(), newProduct.getName(), newProduct.getDescription(), newProduct.getManufacturer(), newProduct.getQuantity(), newProduct.getPrice()});
 
-                        // Close the dialog
-                        Window win = SwingUtilities.getWindowAncestor(saveButton);
-                        if (win != null) {
-                            win.dispose();
+                            // Close the dialog
+                            Window win = SwingUtilities.getWindowAncestor(saveButton);
+                            if (win != null) {
+                                win.dispose();
+                            }
+                        } else {
+                            JOptionPane.showMessageDialog(null, "Item name already exists. Please enter a different name.");
                         }
                     }
                 });
@@ -387,7 +397,7 @@ public class Items extends JPanel {
                     public void actionPerformed(ActionEvent e) {
                         Product selectedProduct = (Product) productComboBox.getSelectedItem();
                         ProductGroup selectedGroup = (ProductGroup) groupComboBox.getSelectedItem();
-                        String newName = newNameField.getText().trim();
+                        String newName = newNameField.getText().trim().toLowerCase();
                         String newDescription = descriptionField.getText().trim();
                         String newManufacturer = manufacturerField.getText().trim();
                         int newQuantity;
@@ -405,29 +415,43 @@ public class Items extends JPanel {
                             newPrice = selectedProduct.getPrice(); // Збереження попереднього значення
                         }
 
-                        // Видалення продукту з попередньої групи
-                        selectedProduct.getGroup().deleteProduct(selectedProduct);
 
-                        // Оновлення властивостей продукту з урахуванням заповнених та попередніх значень
-                        selectedProduct.setName(newName.isEmpty() ? selectedProduct.getName() : newName);
-                        selectedProduct.setGroup(selectedGroup);
-                        selectedProduct.setDescription(newDescription.isEmpty() ? selectedProduct.getDescription() : newDescription);
-                        selectedProduct.setManufacturer(newManufacturer.isEmpty() ? selectedProduct.getManufacturer() : newManufacturer);
-                        selectedProduct.setQuantity(newQuantity);
-                        selectedProduct.setPrice(newPrice);
+                        // Create a HashSet to store item names
+                        HashSet<String> itemNames = new HashSet<>();
+                        for (Product item : Product.getProducts()) {
+                            if (!item.equals(selectedProduct)) { // Exclude the current item from the check
+                                itemNames.add(item.getName().toLowerCase()); // Convert each item name to lower case
+                            }
+                        }
 
-                        // Додавання продукту до нової групи
-                        selectedGroup.addProduct(selectedProduct);
+                        // Check if the item name already exists (case-insensitive)
+                        if (!itemNames.contains(newName)) {
+                            // Remove product from previous group
+                            selectedProduct.getGroup().deleteProduct(selectedProduct);
 
-                        // Оновлення таблиці продуктів
-                        updateProductTable();
-                        Product.writeItemsToFile();
-                        ProductGroup.writeGroupsToFile();
+                            // Update product properties considering filled and previous values
+                            selectedProduct.setName(newName.isEmpty() ? selectedProduct.getName() : newName);
+                            selectedProduct.setGroup(selectedGroup);
+                            selectedProduct.setDescription(newDescription.isEmpty() ? selectedProduct.getDescription() : newDescription);
+                            selectedProduct.setManufacturer(newManufacturer.isEmpty() ? selectedProduct.getManufacturer() : newManufacturer);
+                            selectedProduct.setQuantity(newQuantity);
+                            selectedProduct.setPrice(newPrice);
 
-                        // Закриття діалогового вікна
-                        Window win = SwingUtilities.getWindowAncestor(saveButton);
-                        if (win != null) {
-                            win.dispose();
+                            // Add product to new group
+                            selectedGroup.addProduct(selectedProduct);
+
+                            // Update product table
+                            updateProductTable();
+                            Product.writeItemsToFile();
+                            ProductGroup.writeGroupsToFile();
+
+                            // Close the dialog
+                            Window win = SwingUtilities.getWindowAncestor(saveButton);
+                            if (win != null) {
+                                win.dispose();
+                            }
+                        } else {
+                            JOptionPane.showMessageDialog(null, "Item name already exists. Please enter a different name.");
                         }
                     }
                 });

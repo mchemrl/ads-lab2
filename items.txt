@@ -6,3 +6,4 @@ meth - testcheck - 2 - 2 - 2 - 2.0
 x - 1 - 1 - 1 - 1 - 1.0
 meth - d - d - d - 1 - 1.0
 meth - heroin - notsafe - secret - 222 - 300.0
+meth - ddddd - dddddddd - dddddd - 1 - 1.0
