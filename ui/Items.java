@@ -153,6 +153,25 @@ public class Items extends JPanel {
                         int quantity = Integer.parseInt(quantityField.getText());
                         double price = Double.parseDouble(priceField.getText());
 
+                        try {
+                            quantity = Integer.parseInt(quantityField.getText());
+                            if (quantity < 0) {
+                                throw new NumberFormatException();
+                            }
+                        } catch (NumberFormatException ex) {
+                            JOptionPane.showMessageDialog(null, "Quantity cannot be negative. Please enter a different value.");
+                            return; // Exit the method
+                        }
+
+                        try {
+                            price = Double.parseDouble(priceField.getText());
+                            if (price < 0) {
+                                throw new NumberFormatException();
+                            }
+                        } catch (NumberFormatException ex) {
+                            JOptionPane.showMessageDialog(null, "Price cannot be negative. Please enter a different value.");
+                            return; // Exit the method
+                        }
                         // Create a HashSet to store item names
                         HashSet<String> itemNames = new HashSet<>();
                         for (Product item : Product.getProducts()) {
@@ -289,10 +308,6 @@ public class Items extends JPanel {
                 panel.add(nameLabel);
                 panel.add(productComboBox);
 
-//                SpinnerNumberModel model = new SpinnerNumberModel(Product.findItemByName(productComboBox.getSelectedItem().toString()).getQuantity(), //initial value
-//                        0,  //min
-//                        Integer.MAX_VALUE, //max
-//                        1); //step
                 JSpinner quantityField = new JSpinner();
                 quantityField.setEditor(new JSpinner.DefaultEditor(quantityField));
                 quantityField.setValue(0);
@@ -411,14 +426,23 @@ public class Items extends JPanel {
 
                         // Перевірка і конвертація значень кількості та ціни
                         try {
-                            newQuantity = Integer.parseInt(quantityField.getText().trim());
+                            newQuantity = Integer.parseInt(quantityField.getText());
+                            if (newQuantity < 0) {
+                                throw new NumberFormatException();
+                            }
                         } catch (NumberFormatException ex) {
-                            newQuantity = selectedProduct.getQuantity(); // Збереження попереднього значення
+                            JOptionPane.showMessageDialog(null, "Quantity cannot be negative. Please enter a different value.");
+                            return; // Exit the method
                         }
+
                         try {
-                            newPrice = Double.parseDouble(priceField.getText().trim());
+                            newPrice = Double.parseDouble(priceField.getText());
+                            if (newPrice < 0) {
+                                throw new NumberFormatException();
+                            }
                         } catch (NumberFormatException ex) {
-                            newPrice = selectedProduct.getPrice(); // Збереження попереднього значення
+                            JOptionPane.showMessageDialog(null, "Price cannot be negative. Please enter a different value.");
+                            return; // Exit the method
                         }
 
 
